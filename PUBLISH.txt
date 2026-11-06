@@ -1,3 +1,9 @@
+WHAT'S NEW IN V1.377
+--------------------
+RELIABLE APP UPDATES
+ - Activate the downloaded service worker before reloading, so the app
+   switches to the new version when Update now is pressed.
+
 WHAT'S NEW IN V1.376
 --------------------
 LIVE SUPABASE OWNER SYNC
@@ -291,7 +297,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.376. On a hosted HTTPS site, open the app and
+The current app release is V1.377. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account
