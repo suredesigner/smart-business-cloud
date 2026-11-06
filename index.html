@@ -4162,7 +4162,7 @@ function showUpdateBanner(){
  updateBannerShown=true;
  $("updateBanner").hidden=false;
 }
-$("updateNow").addEventListener("click",()=>window.location.reload());
+$("updateNow").addEventListener("click",async()=>{  let button=$("updateNow");  button.disabled=true;  try{   let registration=await navigator.serviceWorker.getRegistration();   let waiting=registration&&registration.waiting;   if(!waiting){    window.location.reload();    return;   }   await new Promise((resolve,reject)=>{    let timeout=window.setTimeout(()=>{     navigator.serviceWorker.removeEventListener("controllerchange",onControllerChange);     reject(new Error("Timed out while activating the downloaded app update."));    },15000);    let onControllerChange=()=>{     window.clearTimeout(timeout);     resolve();    };    navigator.serviceWorker.addEventListener("controllerchange",onControllerChange,{once:true});    waiting.postMessage({type:"SKIP_WAITING"});   });   window.location.reload();  }catch(error){   console.error("Unable to apply the downloaded app update.",error);   button.disabled=false;   $("updateBanner").querySelector("span").textContent="The update could not be applied. Please try again.";  } });
 function startUpdateWatcher(){
  if(!("serviceWorker" in navigator)||location.protocol==="file:")return;
  let hadController=Boolean(navigator.serviceWorker.controller);
