@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#294d73"/><stop offset="1" stop-color="#0b1a2d"/></linearGradient>
+    <linearGradient id="bars" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8cecff"/><stop offset="1" stop-color="#168cff"/></linearGradient>
+  </defs>
+  <rect x="4" y="4" width="92" height="92" rx="26" fill="#0b1729" stroke="#8bdcff" stroke-opacity=".48" stroke-width="2"/>
+  <rect x="15" y="15" width="70" height="70" rx="21" fill="url(#tile)" stroke="#d7f4ff" stroke-opacity=".38" stroke-width="1.5"/>
+  <path d="M22 30Q22 22 30 22h36" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+  <path d="M27 73h47" fill="none" stroke="#d7f4ff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
+  <rect x="31" y="58" width="9" height="15" rx="4" fill="url(#bars)"/>
+  <rect x="46" y="49" width="9" height="24" rx="4" fill="url(#bars)"/>
+  <rect x="61" y="39" width="9" height="34" rx="4" fill="url(#bars)"/>
+  <path d="M27 54l17-9 12 4 19-19m-10 0h10v10" fill="none" stroke="#ffd779" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="27" cy="54" r="3" fill="#fff0bd"/>
+  <circle cx="44" cy="45" r="3" fill="#fff0bd"/>
+  <circle cx="56" cy="49" r="3" fill="#fff0bd"/>
+</svg>
