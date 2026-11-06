@@ -1,3 +1,11 @@
+WHAT'S NEW IN V1.378
+--------------------
+FASTER PRODUCT CATALOGUE
+ - Wait briefly for typing to pause before filtering, avoiding a full catalogue redraw.
+ - Decode product photos asynchronously and as they scroll into view.
+ - Skip entrance animations during catalogue redraws.
+ - Find the five lowest-stock alerts in one pass.
+
 WHAT'S NEW IN V1.377
 --------------------
 RELIABLE APP UPDATES
@@ -297,7 +305,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.377. On a hosted HTTPS site, open the app and
+The current app release is V1.378. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account
