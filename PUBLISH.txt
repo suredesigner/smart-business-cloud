@@ -1,0 +1,360 @@
+WHAT'S NEW IN V1.376
+--------------------
+LIVE SUPABASE OWNER SYNC
+ - Connect owner sign-in and business-record sync to the hosted Supabase
+   project, with per-owner row-level security.
+ - Sync records across devices with conflict detection and local safety copies.
+ - Use the owner password as a reusable private access code on each device.
+
+SMOOTHER DASHBOARD UPDATES
+ - Summarize sales and expenses in one pass so dashboard refreshes avoid
+   repeatedly scanning the same business records.
+ - Keep translucent glass effects light on phones and other touch devices,
+   including when the light theme is selected.
+
+WHAT'S NEW IN V1.372
+--------------------
+MONTHLY BUSINESS REPORTS
+ - Review any recorded month, save a report snapshot, and reopen saved months
+   from the local archive.
+ - Print or save a PDF, download a spreadsheet-friendly CSV, and include saved
+   monthly reports in app backups for transfer between devices.
+ - Keep the existing all-time statistics and make report actions responsive
+   across desktop, tablet, and phone screens.
+
+WHAT'S NEW IN V1.371
+--------------------
+UPDATED SMART BUSINESS LOGO
+ - Introduce a crisp ledger-and-growth mark across the sign-in screen,
+   app header, launch screen, browser icon, and installable app icons.
+
+WHAT'S NEW IN V1.370
+--------------------
+LIQUID GLASS FINISH
+ - Refine the dashboard, cards, menus, controls, and phone navigation dock
+   with softly layered translucent surfaces and crisp reflective edges.
+ - Keep touch rendering lightweight and preserve readable surfaces when
+   transparency effects are reduced.
+
+WHAT'S NEW IN V1.369
+--------------------
+LANGUAGE SETTINGS AND LOCALIZED APP SCREENS
+ - Add English, Kiswahili, Luganda, Arabic, French, and German language choices.
+ - Keep English as the default and add translated navigation, account, dashboard,
+   product, sales, customer, debt, and settings labels.
+ - Save language and app brightness preferences on this device.
+
+WHAT'S NEW IN V1.368
+--------------------
+MOBILE NAVIGATION AND APP SETTINGS
+ - Put business-section navigation in an easy-to-reach, swipeable phone dock.
+ - Add a saved app-brightness slider and show Smart Business app information,
+   including Made by ALZ, in settings.
+
+WHAT'S NEW IN V1.367
+--------------------
+SMOOTHER APP PERFORMANCE
+ - Reduce blur and repaint-heavy effects, stop continuous background animation,
+   and lighten rendering on smaller and touch-enabled screens.
+ - Avoid refreshing owner-only debt panels for employee accounts and defer the
+   full owner sales history until it is visible.
+
+WHAT'S NEW IN V1.366
+--------------------
+RICHER LIQUID GLASS SURFACES
+ - Add layered translucent panels, soft reflective edges, and glassy controls
+   while keeping the text crisp and readable.
+ - Keep touch-device rendering lighter and honor reduced-motion preferences.
+
+WHAT'S NEW IN V1.365
+--------------------
+AUTOMATIC SEASONAL WALLPAPERS
+ - Add light, offline-ready seasonal background artwork that changes through
+   the year, including Christmas, New Year, winter, Valentine's, spring, summer
+   and autumn.
+ - Keep the existing app theme colors and reduce wallpaper effects on touch
+   devices.
+
+WHAT'S NEW IN V1.364
+--------------------
+OWNER BUSINESS PROFILE AND TOUCH DEVICE POLISH
+ - Show the business name and logo saved by an employee on the owner dashboard.
+ - Refresh saved business data in other open tabs on the same device.
+ - Reduce animation and blur work on touch devices and account for iPhone safe areas.
+
+WHAT'S NEW IN V1.363
+--------------------
+FASTER STARTUP ON INSTALLED DEVICES
+ - Launches the saved app shell from the device cache instead of waiting for
+   the network. The update checker still looks for new releases in the
+   background.
+ - Shortened the welcome animation and render only the current section's
+   detailed lists. Full sales history loads when you scroll to it or open Sales.
+
+WHAT'S NEW IN V1.362
+--------------------
+BOSS MANAGEMENT DASHBOARD AND SHORTCUTS
+ - Added boss access to products, stock, sales, expenses, customers, debts,
+   reports and employee activity.
+ - Enabled the boss to add, update and remove records in those sections.
+ - Made low-stock and out-of-stock dashboard counts open matching product
+   filters; clicking a stock row opens that product in the catalogue.
+
+WHAT'S NEW IN V1.361
+--------------------
+LOCAL-ONLY ACCOUNTS AND CLEARER THEME SETTINGS
+ - Removed the "Sign in across devices" and cloud-connection account panels.
+   Local accounts, employee comments, and product photos remain on this device.
+ - Raised the theme picker above page content so every theme stays visible
+   while changing the appearance.
+
+WHAT'S NEW IN V1.353
+--------------------
+CLEARER LIQUID-GLASS SIDE NAVIGATION
+ - Made the side navigation more transparent, with soft glass highlights,
+   saturation, blur and a restrained luminous edge.
+ - Removed the glass blur and translucent wash from content cards so open
+   pages and business figures remain crisp and easy to read.
+ - Increased contrast for active and hovered navigation items in light and
+   dark themes.
+
+WHAT'S NEW IN V1.352
+--------------------
+EMPLOYEE NOTES AND LIQUID-GLASS-INSPIRED DESIGN
+ - Removed the employee messaging/chat interface and its cloud sync behavior.
+   Comments and product-photo sharing remain available.
+ - Added translucent, layered surfaces, soft highlights and motion to create
+   an iOS-inspired liquid-glass look. This is a web design, not native iOS 27.
+ - Reduced-motion preferences are respected.
+ - Cross-device features from this release are no longer available; V1.354
+   keeps comments and photos on the current device.
+
+WHAT'S NEW IN V1.351
+--------------------
+TEAM CHAT, COMMENTS AND PRODUCT PHOTOS
+ - Owners can add comments to employee accounts; comments are queued while
+   offline when signed in to a cloud workspace, then synchronized on reconnect.
+ - The owner can view product photos shared by cloud-connected employees.
+ - This was the last release to include optional cloud sync; cross-device
+   sign-in was removed in V1.354.
+ - Existing business accounts and records remain local; this release shares
+   comments and product photos only.
+
+WHAT'S NEW IN V1.350
+--------------------
+PRINT WHAT WAS SOLD
+ - Daily Sales (employee) and "Sales and items sold" (owner dashboard) each have
+   a "Print sold items for" bar: Today, Last 7 days, This month, All time, or
+   Choose dates. The printout has a summary by product (pieces and value) and a
+   list of every sale. The owner copy also shows gross profit.
+ - Every sale has a Print button that prints a receipt for the customer.
+ - The owner can also print the Customer debts list.
+
+OWNER CAN ADD AND EDIT DEBTS
+ - Owner dashboard > Customer debts: "+ Add debt", Record payment, Edit, Delete,
+   and remove a mistaken payment. Employees keep the same powers.
+
+THEMES WORK DAY AND NIGHT
+ - Tap any theme in the three-dot menu and it applies immediately and stays,
+   even during the day. Tick "Daylight by day / dark by night" to return to
+   automatic switching. Form fields now follow the chosen theme so text stays
+   clear.
+
+UPDATING THE SAME LINK
+ - See "HOW TO PUBLISH A NEW VERSION" below. A _headers file is included so
+   Netlify always serves the newest app files.
+
+HOW TO PUBLISH A NEW VERSION (keeps the same HTTPS link)
+--------------------------------------------------------
+First time: follow the Netlify steps below and note your link
+(for example https://your-name.netlify.app).
+
+Every later update:
+ 1. Open https://app.netlify.com, choose your site, then the Deploys tab.
+ 2. Drag the NEW folder (with the new index.html and sw.js) onto the
+    "Drag and drop your site output folder here" box.
+ 3. Wait for "Published". The link stays exactly the same.
+ 4. On any device, open the app and press Updates (or wait: it checks on its
+    own). The "Update now" bar appears, press it, and the new version loads.
+    Saved records stay on that device.
+Important: every new release must have a new version number in sw.js
+(APP_VERSION and CACHE_NAME), because that is how devices notice an update.
+Always upload to the SAME site. A different address starts with empty records.
+
+SMART BUSINESS - PUBLISHING
+
+This folder is ready to upload as a static website. Do not upload the
+unrelated PDFs, APK, or personal documents from the ALVIN workspace.
+
+FASTEST WAY TO GET AN UNLISTED SHARE LINK
+
+1. Open https://app.netlify.com/drop in Chrome, Edge, Firefox, or another
+   browser.
+2. Sign in or create a Netlify account.
+3. Drag the entire alz-academy-publish folder onto the upload area.
+4. Wait for deployment to finish. Netlify will show a public HTTPS link
+   ending in netlify.app.
+5. Open that HTTPS link on a computer, Android phone, and iPhone/iPad.
+   Share the same link with anyone who should access the business app.
+6. On Android, use the app's Install app button or Chrome menu and select
+   Install app / Add to Home screen. On iPhone/iPad, open the link in Safari,
+   tap Share, choose Add to Home Screen, and tap Add. On Windows, macOS, or
+   Linux, open the link in Chrome or Edge and select Install Smart Business
+   from the browser menu or the app's Install app button.
+
+The share link is created by the hosting provider after you upload. It
+cannot be generated locally in advance. This is an unlisted link, not a
+private or access-controlled link: anyone who receives or discovers the
+URL can open it. Do not put confidential information in this demo app.
+
+FILES IN THIS FOLDER
+
+index.html       Smart Business app
+collaboration.js Local employee comments and product-photo display
+manifest.json    PWA metadata, configured to open index.html
+sw.js            Offline support for the hosted site
+supabase/        SQL setup for owner business-record cloud sync
+icons/           App icons for Android, desktop browsers, and iOS
+
+The Supabase folder is a deployable CLI project scaffold. See
+supabase/README.md for hosted-project deployment and local development steps.
+
+The HTTPS website address is the install link to share. This folder
+creates an installable web app (PWA), not a separate Windows installer or
+Android APK. No public link exists until the folder is deployed to hosting.
+After installation, the install section is hidden in the installed app.
+
+OWNER RECORDS ACROSS DEVICES
+
+This release is connected to the hosted Supabase project. Owner cloud sign-in
+and sync require an internet connection. Employee accounts, permissions,
+notifications, and device preferences remain local.
+
+1. Publish the contents of this ZIP to the same HTTPS website address used for
+   the existing app. The business-record table and owner access policies are
+   already installed.
+2. Keep a backup of local-only records. If the records currently exist only
+   on another device or a different website address, use that device's Owner >
+   Your data > Backup, then restore the file on this website before creating
+   the cloud account.
+3. On the first device, select Admin / Owner, choose Create account, then
+   register the owner's username and a unique password/code of at least 12
+   characters. The account is created in the cloud and existing local records
+   upload if no cloud record exists yet.
+4. On every other device, open the exact same HTTPS app address and sign in
+   as Admin / Owner with that username and password/code.
+
+The owner password is a reusable access code: anyone with the username and
+code can access the owner's records. Keep it private. When cloud records
+already exist, signing in loads them instead of replacing them; a local
+safety snapshot is kept before local records are replaced. Keep backups. The
+app checks for changes about every 20 seconds and
+uses optimistic conflict checks; if two devices edit at once, it stops syncing
+instead of silently replacing either copy. Resolve the conflict by backing up
+both devices and using one device at a time before signing in again.
+
+WHAT'S NEW IN V1.350
+--------------------
+OWNER NOTIFICATIONS
+ - A bell in the header (owner only) shows unread notifications.
+ - The owner is told when an employee signs in, and when a new employee
+   account is waiting for approval.
+ - Promise-date reminders: when a customer's promised payment date arrives
+   (or has passed) and the debt is not fully paid, the owner is told who to
+   demand payment from, with phone number and balance. The reminder repeats
+   once a day until the debt is paid. The owner dashboard also has a
+   "Payments to demand" panel (overdue, due today, due in the next 3 days).
+ - Press "Turn on device alerts" in the bell panel to also get pop-up alerts
+   from the browser. Alerts are created while the app is open or running in
+   the background on this device. A static site has no server, so it cannot
+   push alerts to a closed app or to other devices; anything that happened
+   meanwhile waits in the bell when the owner next opens the app.
+
+DAYLIGHT / NIGHT THEME
+ - Automatic by default: the new Daylight theme from 6:30 AM to 6:45 PM, and
+   the chosen dark theme (Ocean blue unless changed) at night.
+ - Three-dot menu: untick "Daylight by day / dark by night" to pin one theme.
+   Choosing Daylight pins it on purpose.
+
+UPDATES KEEP YOUR RECORDS
+ - Records, accounts, notifications and theme are stored in the browser, not
+   in the app files, so uploading a new version never erases them. Host the
+   new version at the SAME web address; a different address is a different
+   storage area and starts empty.
+ - The app checks for new versions by itself (on opening, every 30 minutes
+   and when back online) and shows an "Update now" bar. Installed devices
+   open the saved app copy immediately while update checks run in the background.
+ - On the first start of a new version the app keeps a safety copy of the
+   previous records on the device.
+ - Owner menu > Your data: "Backup" downloads one file with all records and
+   accounts; "Restore" loads it back (also the way to move to a new device).
+
+APP UPDATES
+
+The current app release is V1.376. On a hosted HTTPS site, open the app and
+press Updates to check for and apply the newest hosted app files. A new
+version reloads the page while preserving the records already saved in that
+browser. The back-arrow Login button signs out and returns to the account
+screen without deleting saved records.
+
+The app remains a static website. With this release's Supabase connection,
+owner business records sync through the hosted database; employee accounts
+and preferences remain local. If using a different build without cloud
+configuration, records remain browser-local.
+
+CUSTOMER DEBTS (V1.350)
+
+The employee has a Customer Debts page to record what customers owe, record
+payments, edit or delete a debt, and remove a mistaken payment. Sales saved with
+the payment method "Credit / unpaid" create a debt automatically (a customer
+name is required); cancelling that sale removes its debt. The owner dashboard
+shows a read-only Customer debts section with totals owed, overdue and collected.
+
+EMPLOYEE ACCESS CODES AND OWNER PERMISSION (V1.350)
+
+The owner dashboard has an Employee access codes section. Press Generate access
+code and give the code to the employee. A new employee must enter that code when
+creating an Employee / Agent account. Codes stay active: they never expire and
+can be reused. Only the owner can end a code, by pressing Revoke. After registering, the employee
+account is Waiting for approval and cannot sign in until the owner presses
+Approve in the Employee accounts table. The owner can also Block or Unblock an
+employee later; a blocked employee who is signed in is returned to the login
+screen. Employee accounts created before V1.350 stay approved.
+
+ACCOUNT ROLES
+
+Choose Admin / Owner or Employee / Agent at the top of the sign-in screen.
+Create an account for that role, then sign in with its username and password.
+Usernames can include spaces, dots, underscores, and hyphens. The same
+username may be registered separately for both roles. Creating an account
+signs the user into its matching dashboard. The owner has a read-only
+dashboard for sales activity, daily sales, expenditure, product types,
+Shop and Store piece counts, low-stock and out-of-stock counts, plus read-only
+stock quantities by product and location. The owner can also see employee
+account status and last sign-in, plus recent employee-recorded product, stock,
+sales, and expense activity. "Active" means the account has a recent session
+in this browser; other devices cannot be monitored. The employee can add
+products with separate Shop and Store starting quantities, receive stock into
+either location, adjust each location independently, and record sales against
+the selected Shop or Store balance. Sales are deducted from that location
+only; cancelling a sale restores stock to its original location unless its
+product has been deleted. The employee can also enter expenses. Existing
+single stock counts are carried into Store when the app is updated. A maximum
+of three employee accounts can be registered in the current browser;
+additional employee registrations are blocked, while existing employees can
+still sign in.
+
+Work entered before employee activity tracking was added may not show an
+employee name. New product, stock, sale, and expense entries are attributed
+to the signed-in employee.
+
+Local employee accounts and offline records are stored in browser storage;
+role-specific screens alone are not secure permissions. For owner cloud
+records, Supabase Auth protects sign-in and row-level security limits database
+access to the signed-in owner. Keep the public publishable key in the app only
+with row-level security enabled; never put a service-role key in browser code.
+The owner password/code grants access to the business data; keep it private.
+
+The dashboard Updates button reloads the latest records saved in that
+browser. Use the three-dot settings menu to choose from 11 color themes;
+theme preferences are saved on that device.
