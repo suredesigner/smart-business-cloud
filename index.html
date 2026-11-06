@@ -503,7 +503,7 @@ input,select,textarea{background:color-mix(in srgb,var(--panel-deep) 62%,transpa
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 22%,transparent),inset 0 1px 4px rgba(0,0,0,.08)}
 nav button{transition:background .22s,border-color .22s,color .22s,transform .22s}
 nav button:hover{transform:translateX(3px)}
-.product-card{animation:glassEnter .48s cubic-bezier(.18,.75,.22,1) both}
+.product-card{animation:none}
 .product-card-media{background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.015))}
 .item,.owner-stock-row,.due-row,.team-status,.team-photo,.auto-theme-row,.theme-option{background:color-mix(in srgb,var(--glass-fill) 76%,var(--panel-deep));border-color:var(--glass-edge);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%)}
 .business-intro{backdrop-filter:blur(30px) saturate(150%);-webkit-backdrop-filter:blur(30px) saturate(150%)}
@@ -977,7 +977,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.377</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.378</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1024,7 +1024,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.377</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.378</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1236,7 +1236,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="card product-catalogue">
     <div class="product-catalogue-toolbar">
       <div class="product-catalogue-title"><h2>Your catalogue</h2><p>Shop and Store quantities, photos, and selling prices.</p></div>
-      <div class="product-catalogue-search"><label for="productSearch">Search catalogue</label><input id="productSearch" type="search" oninput="renderProducts()" placeholder="Product or category"><label for="productStatusFilter">Stock status</label><select id="productStatusFilter" onchange="renderProducts()"><option value="all">All products</option><option value="empty">Out of stock</option><option value="low">Low stock</option><option value="available">In stock</option></select></div>
+      <div class="product-catalogue-search"><label for="productSearch">Search catalogue</label><input id="productSearch" type="search" oninput="scheduleProductSearch()" placeholder="Product or category"><label for="productStatusFilter">Stock status</label><select id="productStatusFilter" onchange="renderProducts()"><option value="all">All products</option><option value="empty">Out of stock</option><option value="low">Low stock</option><option value="available">In stock</option></select></div>
     </div>
     <p class="product-catalogue-count" id="productCount" aria-live="polite">0 products</p>
     <div class="product-card-grid" id="productList"></div>
@@ -1534,7 +1534,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.377";
+const APP_VERSION="V1.378";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -2956,7 +2956,7 @@ window.addEventListener("storage",event=>{
  if(event.key===LANGUAGE_KEY)setAppLanguage(readAppLanguage(),false);
  if(event.key===NOTIFY_KEY)onNotificationsChangedElsewhere();
 });
-function renderProducts(){
+let productSearchTimer=0; function scheduleProductSearch(){  clearTimeout(productSearchTimer);  productSearchTimer=window.setTimeout(renderProducts,100); } function renderProducts(){
  let q=($("productSearch").value||"").trim().toLowerCase(),status=$("productStatusFilter").value;
  let products=db.products.filter(product=>{
   let quantity=totalStock(product),isEmpty=quantity===0,isLow=!isEmpty&&quantity<=Number(product.low||0);
@@ -2974,7 +2974,7 @@ function renderProducts(){
   let badgeClass=isEmpty?" is-empty":isLow?" is-low":"";
   let price=Number(product.price)||0,cost=Number(product.cost)||0;
   let media=product.image
-   ?`<img src="${esc(product.image)}" alt="${esc(product.name||"Product")}">`
+   ?`<img src="${esc(product.image)}" alt="${esc(product.name||"Product")}" loading="lazy" decoding="async">`
    :'<span class="product-card-placeholder" aria-hidden="true">▦</span>';
   let actions=["admin","agent"].includes(currentRole)
    ?`<div class="product-card-actions"><button type="button" class="secondary" onclick="changeStock('${esc(product.id)}','shop')">Adjust Shop</button><button type="button" class="secondary" onclick="changeStock('${esc(product.id)}','store')">Adjust Store</button><button type="button" class="danger" onclick="deleteProduct('${esc(product.id)}')">Delete</button></div>`
@@ -3798,9 +3798,9 @@ function renderDashboard(summary=null){
  $("todayRevenue").textContent=cash(summary.todayRevenue);
  $("todayTransactions").textContent=`${summary.todayTransactions.toLocaleString()} transaction${summary.todayTransactions===1?"":"s"}`;
  renderSalesTrend(summary,"salesTrend","weekRevenue");
- let alerts=db.products.filter(p=>p.qty<=p.low).sort((a,b)=>a.qty-b.qty);
- $("alertCount").textContent=`${alerts.length} item${alerts.length===1?"":"s"}`;
- $("alerts").innerHTML=alerts.length?alerts.slice(0,5).map(p=>`<div class="dashboard-alert"><div class="dashboard-alert-icon" aria-hidden="true">!</div><div class="dashboard-alert-info"><strong>${esc(p.name)}</strong><small>${p.qty===0?"Out of stock":"Low stock · alert at "+p.low}</small></div><div class="dashboard-alert-count">${p.qty} left</div></div>`).join(""):'<div class="dashboard-empty"><b>All clear</b>No products need restocking right now.</div>';
+ let alerts=[],alertCount=0;for(let product of db.products){if(!(product.qty<=product.low))continue;alertCount++;let index=alerts.findIndex(item=>item.qty>product.qty);if(index<0)index=alerts.length;alerts.splice(index,0,product);if(alerts.length>5)alerts.pop()}
+ $("alertCount").textContent=`${alertCount} item${alertCount===1?"":"s"}`;
+ $("alerts").innerHTML=alertCount?alerts.map(p=>`<div class="dashboard-alert"><div class="dashboard-alert-icon" aria-hidden="true">!</div><div class="dashboard-alert-info"><strong>${esc(p.name)}</strong><small>${p.qty===0?"Out of stock":"Low stock · alert at "+p.low}</small></div><div class="dashboard-alert-count">${p.qty} left</div></div>`).join(""):'<div class="dashboard-empty"><b>All clear</b>No products need restocking right now.</div>';
 }
 function renderOwnerBusinessProfile(){
  let name=db.business.name.trim()||"Your business";
