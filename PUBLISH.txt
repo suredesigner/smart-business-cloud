@@ -1,3 +1,11 @@
+WHAT'S NEW IN V1.380
+--------------------
+CREATE AN OWNER ACCOUNT AND SIGN IN AGAIN
+ - New owners can choose Admin / Owner, then New here? Create account.
+ - Returning owners can sign in with the same username and password to
+   retrieve their synced business data on this device or another phone.
+ - Keep the owner password private; it protects access to the business data.
+
 WHAT'S NEW IN V1.379
 --------------------
 EDIT PRICES WHEN RECEIVING STOCK
@@ -318,7 +326,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.379. On a hosted HTTPS site, open the app and
+The current app release is V1.380. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account

@@ -1,5 +1,5 @@
-const APP_VERSION = "V1.379";
-const CACHE_NAME = "smart-business-v1.379";
+const APP_VERSION = "V1.380";
+const CACHE_NAME = "smart-business-v1.380";
 const APP_SHELL = [
   "./index.html",
   "./collaboration.js",
