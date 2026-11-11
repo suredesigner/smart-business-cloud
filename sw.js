@@ -1,5 +1,5 @@
-const APP_VERSION = "V1.380";
-const CACHE_NAME = "smart-business-v1.380";
+const APP_VERSION = "V1.381";
+const CACHE_NAME = "smart-business-v1.381";
 const APP_SHELL = [
   "./index.html",
   "./collaboration.js",
@@ -18,10 +18,68 @@ const OFFLINE_PAGE = "./index.html";
 
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      // cache:"reload" skips the browser's HTTP cache so a new release is really downloaded
-      .then(cache => cache.addAll(APP_SHELL.map(url => new Request(url, { cache: "reload" }))))
-      .then(() => self.skipWaiting())
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      let previousPercent = -1;
+      const reportProgress = async (completed, fraction, asset) => {
+        const percent = Math.min(99, Math.floor(((completed + fraction) / APP_SHELL.length) * 100));
+        if (percent === previousPercent) return;
+        previousPercent = percent;
+        const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+        windows.forEach(client => client.postMessage({
+          type: "UPDATE_PROGRESS",
+          version: APP_VERSION,
+          completed,
+          total: APP_SHELL.length,
+          asset,
+          percent
+        }));
+      };
+
+      for (let index = 0; index < APP_SHELL.length; index++) {
+        const url = APP_SHELL[index];
+        const request = new Request(url, { cache: "reload" });
+        const response = await fetch(request);
+        if (!response.ok) throw new Error(`Unable to download app file: ${url} (${response.status}).`);
+
+        const filename = new URL(url, self.location.href).pathname.split("/").pop() || url;
+        const contentLength = Number(response.headers.get("content-length")) || 0;
+        const reader = response.body?.getReader();
+        if (!reader) {
+          await cache.put(request, response.clone());
+          await reportProgress(index + 1, 0, filename);
+          continue;
+        }
+
+        const chunks = [];
+        let received = 0;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          received += value.byteLength;
+          const fraction = contentLength
+            ? Math.min(received / contentLength, 0.99)
+            : 0;
+          await reportProgress(index, fraction, filename);
+        }
+
+        const headers = new Headers(response.headers);
+        headers.delete("content-encoding");
+        headers.delete("content-length");
+        headers.delete("content-range");
+        await cache.put(request, new Response(new Blob(chunks), {
+          status: response.status,
+          statusText: response.statusText,
+          headers
+        }));
+        await reportProgress(index + 1, 0, filename);
+      }
+
+      const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      windows.forEach(client => client.postMessage({ type: "UPDATE_COMPLETE", version: APP_VERSION }));
+      await self.skipWaiting();
+    })()
   );
 });
 

@@ -424,6 +424,28 @@ html.theme-fade,html.theme-fade *{transition:background-color .45s,color .35s,bo
 .update-banner{position:fixed;z-index:100001;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);padding:11px 14px;border:1px solid var(--accent-edge);border-radius:14px;background:var(--panel);color:var(--text);box-shadow:0 14px 38px #0006;font-size:13px}
 .update-banner[hidden]{display:none}
 .update-banner button{padding:8px 12px;font-size:12px;white-space:nowrap}
+.update-progress-overlay{position:fixed;inset:0;z-index:100010;display:grid;place-items:center;padding:20px;background:rgba(3,10,22,.58);backdrop-filter:blur(16px) saturate(145%);-webkit-backdrop-filter:blur(16px) saturate(145%)}
+.update-progress-overlay[hidden]{display:none}
+.update-progress-card{position:relative;width:min(420px,100%);overflow:hidden;padding:28px;border:1px solid var(--glass-edge);border-radius:26px;background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 84%,transparent),color-mix(in srgb,var(--panel-deep) 82%,transparent));box-shadow:0 28px 90px rgba(0,0,0,.4),inset 0 1px 0 var(--glass-highlight);backdrop-filter:blur(32px) saturate(175%);-webkit-backdrop-filter:blur(32px) saturate(175%);text-align:center;animation:glassEnter .42s cubic-bezier(.18,.75,.22,1) both}
+.update-progress-card:before{position:absolute;inset:0 0 auto;height:1px;content:"";background:linear-gradient(90deg,transparent,var(--glass-highlight),transparent)}
+.update-progress-orb{width:58px;height:58px;display:grid;place-items:center;margin:0 auto 15px;border:1px solid color-mix(in srgb,var(--blue) 55%,var(--glass-edge));border-radius:20px;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.62),transparent 30%),linear-gradient(145deg,color-mix(in srgb,var(--blue) 60%,transparent),color-mix(in srgb,var(--blue) 14%,var(--panel)));color:var(--text);font-size:27px;box-shadow:0 0 32px color-mix(in srgb,var(--blue) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.48);animation:updateOrbFloat 2.4s ease-in-out infinite}
+.update-progress-kicker{margin:0 0 7px;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:1.6px}
+.update-progress-title{margin:0;font-size:21px}
+.update-progress-subtitle{margin:7px 0 21px;color:var(--muted);font-size:12px;line-height:1.5}
+.update-progress-label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;text-align:left}
+.update-progress-label span{min-width:0;overflow:hidden;color:var(--muted);font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+.update-progress-label strong{font-size:15px;font-variant-numeric:tabular-nums}
+.update-progress-track{height:13px;overflow:hidden;padding:2px;border:1px solid var(--glass-edge);border-radius:20px;background:color-mix(in srgb,var(--panel-deep) 82%,transparent);box-shadow:inset 0 2px 6px rgba(0,0,0,.2)}
+.update-progress-fill{position:relative;width:0;height:100%;overflow:hidden;border-radius:20px;background:linear-gradient(90deg,#35a7ff,var(--blue),#7fe7ff);box-shadow:0 0 16px color-mix(in srgb,var(--blue) 60%,transparent);transition:width .24s cubic-bezier(.2,.8,.2,1)}
+.update-progress-fill:after{position:absolute;inset:0;width:38%;content:"";background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);animation:updateProgressShine 1.35s linear infinite}
+.update-progress-detail{min-height:16px;margin:10px 0 0;color:var(--muted);font-size:10px;overflow-wrap:anywhere}
+.update-progress-close{margin-top:17px}
+@keyframes updateProgressShine{from{transform:translateX(-110%)}to{transform:translateX(300%)}}
+@keyframes updateOrbFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}
+.update-progress-overlay[data-state="complete"] .update-progress-orb{color:var(--green);animation:none}
+.update-progress-overlay[data-state="error"] .update-progress-orb{color:var(--red);animation:none}
+@media(max-width:480px){.update-progress-card{padding:23px 19px;border-radius:22px}.update-progress-title{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.update-progress-orb,.update-progress-fill:after{animation:none}}
 .auto-theme-row{display:flex;align-items:center;gap:9px;margin:0 0 4px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--panel-deep);color:var(--text);font-size:12px;font-weight:700;cursor:pointer}
 .auto-theme-row input{width:auto;margin:0;accent-color:var(--blue)}
 .settings-section-title{margin:15px 0 7px;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
@@ -956,6 +978,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 <div class="toast-stack" id="toastStack" aria-live="polite"></div>
 <div class="update-banner" id="updateBanner" hidden role="status"><span>A new version of Smart Business is ready. Your saved records are safe.</span><button type="button" id="updateNow">Update now</button></div>
+<div class="update-progress-overlay" id="updateProgressDialog" hidden data-state="downloading">
+  <section class="update-progress-card" role="dialog" aria-modal="true" aria-labelledby="updateProgressTitle" aria-describedby="updateProgressSubtitle">
+    <div class="update-progress-orb" id="updateProgressOrb" aria-hidden="true">↻</div>
+    <p class="update-progress-kicker">SMART BUSINESS UPDATE</p>
+    <h2 class="update-progress-title" id="updateProgressTitle">Preparing your update</h2>
+    <p class="update-progress-subtitle" id="updateProgressSubtitle">Downloading the latest app files. Your saved business records stay safe.</p>
+    <div class="update-progress-label"><span id="updateProgressMessage">Checking for updates…</span><strong id="updateProgressPercent">0%</strong></div>
+    <div class="update-progress-track" id="updateProgressTrack" role="progressbar" aria-label="App update download progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="update-progress-fill" id="updateProgressFill"></div></div>
+    <p class="update-progress-detail" id="updateProgressDetail" aria-live="polite"></p>
+    <button type="button" class="secondary update-progress-close" id="updateProgressClose" hidden>Close</button>
+  </section>
+</div>
 <div class="workspace">
 <nav id="navigation" aria-label="Business sections" role="tablist">
   <div class="nav-heading">WORKSPACE</div>
@@ -977,7 +1011,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.380</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.381</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1024,7 +1058,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.380</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.381</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1535,7 +1569,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.380";
+const APP_VERSION="V1.381";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -2710,21 +2744,67 @@ function getServiceWorkerVersion(worker){
   worker.postMessage({type:"GET_VERSION"},[channel.port2]);
  });
 }
+function setUpdateProgress(percent,message,detail="",state="downloading"){
+ let value=Math.max(0,Math.min(100,Math.round(Number(percent)||0)));
+ let dialog=$("updateProgressDialog");
+ dialog.dataset.state=state;
+ $("updateProgressPercent").textContent=`${value}%`;
+ $("updateProgressMessage").textContent=message;
+ $("updateProgressDetail").textContent=detail;
+ $("updateProgressFill").style.width=`${value}%`;
+ $("updateProgressTrack").setAttribute("aria-valuenow",String(value));
+}
+function showUpdateProgress(){
+ $("updateProgressDialog").hidden=false;
+ $("updateProgressClose").hidden=true;
+ $("updateProgressTitle").textContent="Preparing your update";
+ $("updateProgressSubtitle").textContent="Downloading the latest app files. Your saved business records stay safe.";
+ setUpdateProgress(1,"Checking for updates…","Connecting to the latest app release.");
+}
+function finishUpdateProgress(title,message,detail="",state="complete",percent=100){
+ $("updateProgressTitle").textContent=title;
+ $("updateProgressSubtitle").textContent=message;
+ $("updateProgressClose").hidden=false;
+ setUpdateProgress(percent,state==="error"?"Download interrupted":"Update ready",detail,state);
+}
+$("updateProgressClose").addEventListener("click",()=>{$("updateProgressDialog").hidden=true});
+$("updateProgressDialog").addEventListener("click",event=>{
+ if(event.target===$("updateProgressDialog")&&!$("updateProgressClose").hidden)$("updateProgressDialog").hidden=true;
+});
+function handleUpdateWorkerMessage(event){
+ let data=event.data;
+ if(data?.type==="UPDATE_PROGRESS"){
+  $("updateProgressDialog").hidden=false;
+  $("updateProgressClose").hidden=true;
+  $("updateProgressTitle").textContent=`Downloading ${data.version||"app update"}`;
+  setUpdateProgress(data.percent,`Downloading ${data.asset||"app files"}…`,`${data.completed||0} of ${data.total||0} files cached · ${data.percent||0}%`);
+ }else if(data?.type==="UPDATE_COMPLETE"){
+  $("updateProgressTitle").textContent=`${data.version||"App update"} downloaded`;
+  $("updateProgressSubtitle").textContent="The new app is ready. Your saved business records stay safe.";
+  setUpdateProgress(100,"Download complete","Activating the new app version.","complete");
+ }
+}
 async function refreshUpdates(){
  let button=$("refreshUpdates");
  button.disabled=true;
+ showUpdateProgress();
  $("updatesStatus").textContent="Checking for updates...";
  try{
-  if(!load())return;
+  if(!load()){
+   finishUpdateProgress("Saved data could not be refreshed","Your saved records could not be loaded on this device.","The current app was not changed.","error",0);
+   return;
+  }
   scheduleRenderAll();
   if(!("serviceWorker" in navigator)||!window.isSecureContext||location.protocol==="file:"){
    markUpdatesLoaded(`${APP_VERSION} · Data refreshed`);
    $("updatesStatus").textContent="Saved records refreshed. App updates require the hosted HTTPS link.";
+   finishUpdateProgress("App updates unavailable","Open the hosted HTTPS app to download new versions.","Your saved records were refreshed on this device.","error",0);
    return;
   }
   let hadController=Boolean(navigator.serviceWorker.controller);
   let registration=await navigator.serviceWorker.getRegistration();
   if(!registration)registration=await navigator.serviceWorker.register("./sw.js");
+  navigator.serviceWorker.addEventListener("message",handleUpdateWorkerMessage);
   let updateFound=Boolean(registration.installing||registration.waiting);
   registration.addEventListener("updatefound",()=>{updateFound=true});
   let controllerChanged=false;
@@ -2732,7 +2812,8 @@ async function refreshUpdates(){
    if(!updateFound||!hadController)return;
    controllerChanged=true;
    $("updatesStatus").textContent="New app version installed. Reloading...";
-   window.location.reload();
+   setUpdateProgress(100,"Download complete","Opening the updated app…","complete");
+   window.setTimeout(()=>window.location.reload(),450);
   };
   navigator.serviceWorker.addEventListener("controllerchange",onControllerChange);
   try{
@@ -2740,10 +2821,29 @@ async function refreshUpdates(){
    let worker=registration.installing||registration.waiting;
    if(worker){
     updateFound=true;
-    if(worker.state==="installed"||worker.state==="activated")worker.postMessage({type:"SKIP_WAITING"});
-    else worker.addEventListener("statechange",()=>{
-     if(worker.state==="installed")worker.postMessage({type:"SKIP_WAITING"});
-    });
+    if(worker.state==="redundant")throw new Error("The new app files could not be downloaded. Check your connection and try again.");
+    if(worker.state!=="installed"&&worker.state!=="activated"){
+     await new Promise((resolve,reject)=>{
+      let timeout=window.setTimeout(()=>{
+       worker.removeEventListener("statechange",onInstallStateChange);
+       reject(new Error("Timed out while downloading the new app files."));
+      },30000);
+      let onInstallStateChange=()=>{
+       if(worker.state==="redundant"){
+        window.clearTimeout(timeout);
+        worker.removeEventListener("statechange",onInstallStateChange);
+        reject(new Error("The new app files could not be downloaded. Check your connection and try again."));
+       }else if(worker.state==="installed"||worker.state==="activated"){
+        window.clearTimeout(timeout);
+        worker.removeEventListener("statechange",onInstallStateChange);
+        resolve();
+       }
+      };
+      worker.addEventListener("statechange",onInstallStateChange);
+      onInstallStateChange();
+     });
+    }
+    if(worker.state==="installed")worker.postMessage({type:"SKIP_WAITING"});
    }
    if(updateFound){
     if(registration.waiting)registration.waiting.postMessage({type:"SKIP_WAITING"});
@@ -2766,6 +2866,7 @@ async function refreshUpdates(){
      return;
     }
     $("updatesStatus").textContent="Update downloaded. Reopen the app to use the latest version.";
+    finishUpdateProgress("Update downloaded","The latest app files are ready.","Your saved business records are safe.");
     markUpdatesLoaded(`${APP_VERSION} · Update ready`);
    }else{
     let activeVersion=await getServiceWorkerVersion(navigator.serviceWorker.controller||registration.active);
@@ -2775,14 +2876,17 @@ async function refreshUpdates(){
      return;
     }
     $("updatesStatus").textContent=`App is up to date (${APP_VERSION}). Saved records refreshed.`;
+    finishUpdateProgress("You're up to date","You already have the latest app version.","No download was needed.");
     markUpdatesLoaded(`${APP_VERSION} · Checked`);
    }
   }finally{
    navigator.serviceWorker.removeEventListener("controllerchange",onControllerChange);
+   navigator.serviceWorker.removeEventListener("message",handleUpdateWorkerMessage);
   }
  }catch(error){
   console.error("Unable to check for app updates.",error);
   $("updatesStatus").textContent="Could not check for app updates. Check your connection and try again.";
+  finishUpdateProgress("Update couldn't finish","Check your internet connection, then try again.","Your current app and saved business records are unchanged.","error",Number($("updateProgressTrack").getAttribute("aria-valuenow"))||0);
  }finally{
   button.disabled=false;
  }
@@ -4195,11 +4299,17 @@ function showUpdateBanner(){
 $("updateNow").addEventListener("click",async()=>{
  let button=$("updateNow");
  button.disabled=true;
+ $("updateProgressDialog").hidden=false;
+ $("updateProgressClose").hidden=true;
+ $("updateProgressTitle").textContent="Applying your update";
+ $("updateProgressSubtitle").textContent="The new app has already been downloaded. Your saved business records stay safe.";
+ setUpdateProgress(100,"Download complete","Installing the new app version…","complete");
  try{
   let registration=await navigator.serviceWorker.getRegistration();
   let waiting=registration&&registration.waiting;
   if(!waiting){
-   window.location.reload();
+   button.disabled=false;
+   await refreshUpdates();
    return;
   }
   await new Promise((resolve,reject)=>{
@@ -4219,6 +4329,7 @@ $("updateNow").addEventListener("click",async()=>{
   console.error("Unable to apply the downloaded app update.",error);
   button.disabled=false;
   $("updateBanner").querySelector("span").textContent="The update could not be applied. Please try again.";
+  finishUpdateProgress("Update couldn't be applied","Your current app and saved business records are unchanged.",error.message||"Try the Updates button again.","error",100);
  }
 });
 function startUpdateWatcher(){

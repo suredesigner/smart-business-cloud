@@ -1,3 +1,11 @@
+WHAT'S NEW IN V1.381
+--------------------
+LIQUID-GLASS APP UPDATE PROGRESS
+ - Show the download progress from 1–100% while the new app files are
+   downloaded and cached, with a glossy animated progress bar.
+ - Show file progress and a clear completion or connection-error message.
+ - Keep saved business records safe while the app updates.
+
 WHAT'S NEW IN V1.380
 --------------------
 CREATE AN OWNER ACCOUNT AND SIGN IN AGAIN
@@ -326,7 +334,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.380. On a hosted HTTPS site, open the app and
+The current app release is V1.381. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account
