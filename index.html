@@ -13,6 +13,14 @@
 <link rel="icon" href="icons/smart-business.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/smart-business-192.png">
 <title>Smart Business</title>
+<script>
+(()=>{
+ const platform=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||"";
+ const cores=Number(navigator.hardwareConcurrency)||0,memory=Number(navigator.deviceMemory)||0;
+ if(/windows/i.test(platform)&&((cores>0&&cores<=4)||(memory>0&&memory<=4)))
+  document.documentElement.classList.add("windows-performance");
+})();
+</script>
 <style>
 :root{color-scheme:dark;--bg:#081222;--panel:#111f35;--line:#293d5b;--blue:#168cff;--gold:#f2bf60;--text:#eff6ff;--muted:#a5b6d0;--green:#42d6a0;--red:#ff8293;--bg-glow:#153765;--panel-deep:#0a1526;--accent-soft:#168cff30;--accent-edge:#168cff55}
 :root[data-theme="forest"]{--bg:#0b1814;--panel:#14251e;--line:#30483b;--blue:#31b879;--gold:#d5bd70;--text:#eff9f2;--muted:#a6bcae;--bg-glow:#214b38;--panel-deep:#101d17;--accent-soft:#31b87930;--accent-edge:#31b87955}
@@ -773,7 +781,6 @@ button,nav button,.card,.dashboard-panel,.dashboard-metric,.product-card{transit
   :root[data-theme="light"] header,:root[data-theme="light"] nav,:root[data-theme="light"] .dashboard-hero,:root[data-theme="light"] .dashboard-panel,:root[data-theme="light"] .dashboard-metric,:root[data-theme="light"] .business-profile,:root[data-theme="light"] .dashboard-toolbar,:root[data-theme="light"] .product-card,:root[data-theme="light"] .settings-popover,:root[data-theme="light"] .notify-panel,:root[data-theme="light"] .update-banner,:root[data-theme="light"] .modal-overlay .stock-adjust-dialog,:root[data-theme="light"] #login{backdrop-filter:none;-webkit-backdrop-filter:none}
   body:before{filter:none;animation:none}
 }
-#application>header,#application>.workspace>nav,#application>.workspace>main{filter:brightness(var(--app-brightness,1))}
 .settings-popover{inset-block-start:max(76px,env(safe-area-inset-top));inset-inline-end:max(12px,env(safe-area-inset-right));max-height:calc(100vh - 92px);max-height:calc(100dvh - 92px)}
 .settings-range{display:flex;align-items:center;gap:12px}
 .settings-range input{padding:0;accent-color:var(--blue)}
@@ -858,6 +865,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .report-month-actions button{min-width:0;padding:10px 8px;font-size:12px}
   .report-month-metrics{gap:9px}
 }
+html.windows-performance header,html.windows-performance nav,html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none}
+html.windows-performance header{background:var(--bg)}
+html.windows-performance nav{background:var(--panel-deep)}
+html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{background:var(--panel)}
+html.windows-performance .product-card{content-visibility:auto;contain-intrinsic-size:auto 360px}
+html.windows-performance .card,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .product-card,html.windows-performance button{transition:none!important}
+html.windows-performance .card:hover,html.windows-performance .dashboard-panel:hover,html.windows-performance .dashboard-metric:hover,html.windows-performance .product-card:hover{transform:none;box-shadow:none}
 </style>
 </head>
 <body>
@@ -1011,7 +1025,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.381</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.382</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1058,7 +1072,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.381</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.382</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1369,7 +1383,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="card">
     <h3>Debt records</h3>
     <div class="debt-filters">
-      <div><label for="debtSearch">Search customer</label><input id="debtSearch" type="search" oninput="renderDebts()" placeholder="Name or phone"></div>
+      <div><label for="debtSearch">Search customer</label><input id="debtSearch" type="search" oninput="scheduleDebtSearch()" placeholder="Name or phone"></div>
       <div><label for="debtFilter">Show</label><select id="debtFilter" onchange="renderDebts()"><option value="open">Not fully paid</option><option value="overdue">Overdue only</option><option value="paid">Fully paid</option><option value="all">All debts</option></select></div>
     </div>
     <div class="tablewrap"><table><thead><tr><th>Date</th><th>Customer</th><th>Owed</th><th>Paid</th><th>Balance</th><th>Promised by</th><th>Status</th><th>Action</th></tr></thead><tbody id="debtList"></tbody></table></div>
@@ -1569,7 +1583,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.381";
+const APP_VERSION="V1.382";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -2574,7 +2588,11 @@ function readAppBrightness(){
 }
 function applyAppBrightness(value,persist=false){
  let brightness=Math.min(100,Math.max(70,Math.round(Number(value)||100)));
- document.documentElement.style.setProperty("--app-brightness",String(brightness/100));
+ let filter=brightness===100?"":`brightness(${brightness/100})`;
+ $("application").querySelectorAll(":scope > header, :scope > .workspace > nav, :scope > .workspace > main").forEach(element=>{
+  if(filter)element.style.filter=filter;
+  else element.style.removeProperty("filter");
+ });
  $("brightnessSlider").value=String(brightness);
  $("brightnessValue").textContent=`${brightness}%`;
  if(persist){
@@ -3075,10 +3093,14 @@ window.addEventListener("storage",event=>{
  if(event.key===LANGUAGE_KEY)setAppLanguage(readAppLanguage(),false);
  if(event.key===NOTIFY_KEY)onNotificationsChangedElsewhere();
 });
-let productSearchTimer=0;
+let productSearchTimer=0,debtSearchTimer=0;
 function scheduleProductSearch(){
  clearTimeout(productSearchTimer);
- productSearchTimer=window.setTimeout(renderProducts,100);
+ productSearchTimer=window.setTimeout(renderProducts,150);
+}
+function scheduleDebtSearch(){
+ clearTimeout(debtSearchTimer);
+ debtSearchTimer=window.setTimeout(renderDebts,150);
 }
 function renderProducts(){
  let q=($("productSearch").value||"").trim().toLowerCase(),status=$("productStatusFilter").value;

@@ -1,3 +1,11 @@
+WHAT'S NEW IN V1.382
+--------------------
+SMOOTHER WINDOWS PERFORMANCE
+ - Avoid applying a full-page graphics filter at the normal 100% brightness.
+ - Automatically reduce blur, shadows, and off-screen product-card rendering
+   on lower-powered Windows PCs, while keeping the full visuals on other PCs.
+ - Wait for typing to pause before rebuilding a long customer-debt list.
+
 WHAT'S NEW IN V1.381
 --------------------
 LIQUID-GLASS APP UPDATE PROGRESS
@@ -334,7 +342,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.381. On a hosted HTTPS site, open the app and
+The current app release is V1.382. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account
