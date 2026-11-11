@@ -1,16 +1,29 @@
+WHAT'S NEW IN V1.379
+--------------------
+EDIT PRICES WHEN RECEIVING STOCK
+ - Set the buying and selling price for each new stock receipt. The selling
+   price updates the product for future sales, and purchase history records
+   both prices.
+
+OWNER DATA ON YOUR PHONE
+ - Open the same app link on your phone, choose Admin / Owner, and sign in
+   with the same username and private password/code. Google sign-in is not
+   required; owner records sync through the existing account.
+
 WHAT'S NEW IN V1.378
 --------------------
 FASTER PRODUCT CATALOGUE
- - Wait briefly for typing to pause before filtering, avoiding a full catalogue redraw.
- - Decode product photos asynchronously and as they scroll into view.
- - Skip entrance animations during catalogue redraws.
- - Find the five lowest-stock alerts in one pass.
+ - Wait briefly for typing to pause before filtering, avoiding a full catalogue
+   redraw on every search keystroke.
+ - Decode product photos in the background and as they scroll into view.
+ - Skip product-card entrance animations during catalogue redraws.
+ - Build the dashboard's five lowest-stock alerts in one pass.
 
 WHAT'S NEW IN V1.377
 --------------------
 RELIABLE APP UPDATES
- - Activate the downloaded service worker before reloading, so the app
-   switches to the new version when Update now is pressed.
+ - Make Update now activate the downloaded service worker before reloading,
+   so installed devices switch to the new app version.
 
 WHAT'S NEW IN V1.376
 --------------------
@@ -305,7 +318,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.378. On a hosted HTTPS site, open the app and
+The current app release is V1.379. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account
@@ -313,8 +326,10 @@ screen without deleting saved records.
 
 The app remains a static website. With this release's Supabase connection,
 owner business records sync through the hosted database; employee accounts
-and preferences remain local. If using a different build without cloud
-configuration, records remain browser-local.
+and preferences remain local. To use the owner's business records on a phone,
+open this same site and sign in as Admin / Owner with the same username and
+private password/code. Google sign-in is not required. If using a different
+build without cloud configuration, records remain browser-local.
 
 CUSTOMER DEBTS (V1.350)
 

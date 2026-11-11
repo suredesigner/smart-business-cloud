@@ -904,7 +904,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <p class="login-feedback" id="teamCloudLoginStatus" role="status" aria-live="polite"></p>
     </form>
   </div>
-  <p class="login-security-note">Owner accounts sync business records across devices using the same username and private password/code. Keep the owner code secret.</p>
+  <p class="login-security-note">To use owner data on another device or phone, open this same app link and sign in as Admin / Owner with the same username and private password/code. Google sign-in is not required. Keep the owner code secret.</p>
   <section class="app-install-card" id="appInstallCard" aria-labelledby="appInstallTitle">
     <h2 id="appInstallTitle">Install Smart Business</h2>
     <p>Use the install button on Android or a computer. On iPhone or iPad, open this link in Safari, tap Share, then choose “Add to Home Screen”.</p>
@@ -977,7 +977,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.378</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.379</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1024,7 +1024,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.378</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.379</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1252,14 +1252,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="wide"><label>Product *</label><select id="stockProduct" required></select></div>
         <div><label>Receive into *</label><select id="stockLocation" required><option value="store">Store</option><option value="shop">Shop</option></select></div>
         <div><label>Quantity received *</label><input id="stockQty" type="number" min="1" step="1" required></div>
-        <div><label>Cost per item (UGX) *</label><input id="stockCost" type="number" min="0" step="1" required></div>
+        <div><label>Buying price per item (UGX) *</label><input id="stockCost" type="number" min="0" step="1" required></div>
+        <div><label>Selling price per item (UGX) *</label><input id="stockPrice" type="number" min="0" step="1" required></div>
         <div><label>Date received *</label><input id="stockDate" type="date" required></div>
         <div><label>Supplier / reference</label><input id="stockSupplier"></div>
       </div>
       <div class="actions"><button type="submit">Add stock</button></div>
     </form>
   </div>
-  <div class="card"><h3>Stock purchase history</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Product</th><th>Location</th><th>Quantity</th><th>Cost/item</th><th>Total cost</th><th>Supplier</th></tr></thead><tbody id="stockHistory"></tbody></table></div></div>
+  <div class="card"><h3>Stock purchase history</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Product</th><th>Location</th><th>Quantity</th><th>Buying price/item</th><th>Selling price/item</th><th>Total cost</th><th>Supplier</th></tr></thead><tbody id="stockHistory"></tbody></table></div></div>
 </section>
 
 <section id="sales" class="page" role="tabpanel" aria-labelledby="nav-sales">
@@ -1534,7 +1535,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.378";
+const APP_VERSION="V1.379";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -1676,6 +1677,7 @@ const APP_TRANSLATIONS={
  "Product name *":{sw:"Jina la bidhaa *",lg:"Erinnya ly'ekintu *",ar:"اسم المنتج *",fr:"Nom du produit *",de:"Produktname *"},
  "Category":{sw:"Kategoria",lg:"Ekika",ar:"الفئة",fr:"Catégorie",de:"Kategorie"},
  "Buying cost per item (UGX) *":{sw:"Gharama ya kununua kwa bidhaa (UGX) *",lg:"Omuwendo gw'okugula buli kintu (UGX) *",ar:"تكلفة شراء المنتج (UGX) *",fr:"Coût d’achat par article (UGX) *",de:"Einkaufspreis pro Stück (UGX) *"},
+ "Buying price per item (UGX) *":{sw:"Bei ya kununua kwa bidhaa (UGX) *",lg:"Omuwendo gw'okugula buli kintu (UGX) *",ar:"سعر شراء المنتج (UGX) *",fr:"Prix d’achat par article (UGX) *",de:"Einkaufspreis pro Stück (UGX) *"},
  "Selling price per item (UGX) *":{sw:"Bei ya kuuza kwa bidhaa (UGX) *",lg:"Omuwendo gw'okutunda buli kintu (UGX) *",ar:"سعر بيع المنتج (UGX) *",fr:"Prix de vente par article (UGX) *",de:"Verkaufspreis pro Stück (UGX) *"},
  "Starting pieces in Store *":{sw:"Vipande vya kuanzia Ghalani *",lg:"Ebintu ebisooka mu Wooteri *",ar:"الكمية الأولية في المستودع *",fr:"Quantité initiale en entrepôt *",de:"Anfangsbestand im Lager *"},
  "Starting pieces in Shop *":{sw:"Vipande vya kuanzia Dukani *",lg:"Ebintu ebisooka mu Dduuka *",ar:"الكمية الأولية في المتجر *",fr:"Quantité initiale en magasin *",de:"Anfangsbestand im Laden *"},
@@ -1901,6 +1903,8 @@ const APP_TRANSLATIONS={
  "Record new stock and choose whether the pieces are received into the Shop or Store.":{sw:"Rekodi hisa mpya na uchague kama vipande vinaingizwa Dukani au Ghalani.",lg:"Wandiika ebintu ebipya olonde oba biteekebwa mu Dduuka oba Wooteri.",ar:"سجّل المخزون الجديد واختر استلام الكمية في المتجر أو المستودع.",fr:"Enregistrez le nouveau stock et choisissez sa réception en magasin ou en entrepôt.",de:"Erfassen Sie neuen Bestand und wählen Sie, ob er im Laden oder Lager eingeht."},
  "Product *":{sw:"Bidhaa *",lg:"Ekintu *",ar:"المنتج *",fr:"Produit *",de:"Produkt *"},
  "Cost per item (UGX) *":{sw:"Gharama kwa bidhaa (UGX) *",lg:"Omuwendo buli kintu (UGX) *",ar:"تكلفة المنتج (UGX) *",fr:"Coût par article (UGX) *",de:"Kosten pro Stück (UGX) *"},
+ "Buying price/item":{sw:"Bei ya kununua/bidhaa",lg:"Omuwendo gw'okugula/ekintu",ar:"سعر الشراء/المنتج",fr:"Prix d’achat/article",de:"Einkaufspreis/Stück"},
+ "Selling price/item":{sw:"Bei ya kuuza/bidhaa",lg:"Omuwendo gw'okutunda/ekintu",ar:"سعر البيع/المنتج",fr:"Prix de vente/article",de:"Verkaufspreis/Stück"},
  "Choose whether each sold item came from the Shop or Store. The matching stock balance is reduced immediately.":{sw:"Chagua kama kila bidhaa iliyouzwa ilitoka Dukani au Ghalani. Hisa husika hupunguzwa mara moja.",lg:"Londa oba ekintu kyatundiddwa kyava mu Dduuka oba Wooteri. Ebintu ebikozeseddwa biggyibwako amangu.",ar:"اختر ما إذا كان كل منتج مباع من المتجر أو المستودع. يُخصم المخزون المطابق فورًا.",fr:"Choisissez si chaque article vendu vient du magasin ou de l’entrepôt. Le stock correspondant est déduit immédiatement.",de:"Wählen Sie, ob ein verkaufter Artikel aus Laden oder Lager stammt. Der passende Bestand wird sofort abgezogen."},
  "Sale date *":{sw:"Tarehe ya mauzo *",lg:"Olunaku lw'okutunda *",ar:"تاريخ البيع *",fr:"Date de vente *",de:"Verkaufsdatum *"},
  "Expense":{sw:"Matumizi",lg:"Ensaasaanya",ar:"مصروف",fr:"Dépense",de:"Ausgabe"},
@@ -2787,9 +2791,20 @@ function setDates(){["saleDate","stockDate","edate","debtDate"].forEach(x=>$(x).
 function productOptions(){
  return db.products.map(product=>`<option value="${esc(product.id)}">${esc(product.name)} — Shop ${stockAt(product,"shop")}, Store ${stockAt(product,"store")} — ${cash(product.price)}</option>`).join("");
 }
+let stockPriceDefaultProductId="";
+function updateStockPriceDefaults(force=false){
+ let productId=$("stockProduct").value;
+ if(!productId||(!force&&productId===stockPriceDefaultProductId))return;
+ let product=db.products.find(item=>item.id===productId);
+ if(!product)return;
+ $("stockCost").value=Number(product.cost)||0;
+ $("stockPrice").value=Number(product.price)||0;
+ stockPriceDefaultProductId=productId;
+}
 function refreshSelects(){
  let options=productOptions();
  $("stockProduct").innerHTML=options||'<option value="">Add a product first</option>';
+ updateStockPriceDefaults();
  document.querySelectorAll(".saleProduct").forEach(s=>{let old=s.value;s.innerHTML=options||'<option value="">No products available</option>';if(db.products.some(p=>p.id===old))s.value=old});
 }
 $("productForm").addEventListener("submit",async e=>{
@@ -2956,7 +2971,12 @@ window.addEventListener("storage",event=>{
  if(event.key===LANGUAGE_KEY)setAppLanguage(readAppLanguage(),false);
  if(event.key===NOTIFY_KEY)onNotificationsChangedElsewhere();
 });
-let productSearchTimer=0; function scheduleProductSearch(){  clearTimeout(productSearchTimer);  productSearchTimer=window.setTimeout(renderProducts,100); } function renderProducts(){
+let productSearchTimer=0;
+function scheduleProductSearch(){
+ clearTimeout(productSearchTimer);
+ productSearchTimer=window.setTimeout(renderProducts,100);
+}
+function renderProducts(){
  let q=($("productSearch").value||"").trim().toLowerCase(),status=$("productStatusFilter").value;
  let products=db.products.filter(product=>{
   let quantity=totalStock(product),isEmpty=quantity===0,isLow=!isEmpty&&quantity<=Number(product.low||0);
@@ -3065,19 +3085,21 @@ function deleteProduct(id){
   save();
  }
 }
+$("stockProduct").addEventListener("change",()=>updateStockPriceDefaults(true));
 $("stockForm").addEventListener("submit",e=>{
- e.preventDefault();if(!requireBusinessUser())return;let p=db.products.find(x=>x.id===$("stockProduct").value),qty=+$("stockQty").value,cost=+$("stockCost").value;
+ e.preventDefault();if(!requireBusinessUser())return;let p=db.products.find(x=>x.id===$("stockProduct").value),qty=+$("stockQty").value,cost=+$("stockCost").value,price=+$("stockPrice").value;
  if(!p){alert("Add and select a product first.");return}
+ if(!Number.isInteger(qty)||qty<1||!Number.isFinite(cost)||cost<0||!Number.isFinite(price)||price<0){alert("Enter a valid quantity, buying price, and selling price.");return}
  let location=$("stockLocation").value;
  if(!["store","shop"].includes(location)){alert("Choose Store or Shop for the received stock.");return}
- p[location==="shop"?"shopQty":"storeQty"]+=qty;syncProductStock(p);p.cost=cost;
+ p[location==="shop"?"shopQty":"storeQty"]+=qty;syncProductStock(p);p.cost=cost;p.price=price;
  p.lastUpdatedBy=currentUsername;
- db.stock.unshift({id:uid(),date:$("stockDate").value,productId:p.id,name:p.name,location,qty,cost,supplier:$("stockSupplier").value.trim(),recordedBy:currentUsername});
+ db.stock.unshift({id:uid(),date:$("stockDate").value,productId:p.id,name:p.name,location,qty,cost,price,supplier:$("stockSupplier").value.trim(),recordedBy:currentUsername});
  addEmployeeActivity("Stock received",`${p.name} · ${qty} pieces into ${location==="shop"?"Shop":"Store"}`);
  // Purchases are also business costs. They are separate from expenses so stock costs aren't double-counted as sold goods.
- save();e.target.reset();$("stockLocation").value=location;setDates();alert(`Stock received into ${location==="shop"?"Shop":"Store"}. Remaining quantity updated.`);
+ save();e.target.reset();$("stockLocation").value=location;stockPriceDefaultProductId="";updateStockPriceDefaults(true);setDates();alert(`Stock received into ${location==="shop"?"Shop":"Store"}. Remaining quantity updated.`);
 });
-function renderStock(){$("stockHistory").innerHTML=db.stock.map(s=>`<tr><td>${esc(s.date)}</td><td>${esc(s.name)}</td><td>${s.location==="shop"?"Shop":"Store"}</td><td>${s.qty}</td><td>${cash(s.cost)}</td><td>${cash(s.qty*s.cost)}</td><td>${esc(s.supplier)}</td></tr>`).join("")||'<tr><td colspan="7">No stock purchases recorded.</td></tr>'}
+function renderStock(){$("stockHistory").innerHTML=db.stock.map(s=>`<tr><td>${esc(s.date)}</td><td>${esc(s.name)}</td><td>${s.location==="shop"?"Shop":"Store"}</td><td>${s.qty}</td><td>${cash(s.cost)}</td><td>${s.price===undefined?"—":cash(s.price)}</td><td>${cash(s.qty*s.cost)}</td><td>${esc(s.supplier)}</td></tr>`).join("")||'<tr><td colspan="8">No stock purchases recorded.</td></tr>'}
 function addSaleRow(){
  let d=document.createElement("div");d.className="formgrid sale-row card";
  d.innerHTML=`<div class="wide"><label>Product *</label><select class="saleProduct" required onchange="updatePrice(this)">${productOptions()||'<option value="">Add products first</option>'}</select></div><div><label>Take stock from *</label><select class="saleLocation" required onchange="salePreview()"><option value="shop">Shop</option><option value="store">Store</option></select></div><div><label>Quantity sold *</label><input class="saleQty" type="number" min="1" step="1" value="1" required oninput="salePreview()"></div><div><label>Sale price per item (UGX)</label><input class="salePrice" type="number" min="0" step="1" oninput="salePreview()"></div><div class="wide"><button type="button" class="danger" onclick="this.closest('.sale-row').remove();salePreview()">Remove item</button></div>`;
@@ -3798,7 +3820,15 @@ function renderDashboard(summary=null){
  $("todayRevenue").textContent=cash(summary.todayRevenue);
  $("todayTransactions").textContent=`${summary.todayTransactions.toLocaleString()} transaction${summary.todayTransactions===1?"":"s"}`;
  renderSalesTrend(summary,"salesTrend","weekRevenue");
- let alerts=[],alertCount=0;for(let product of db.products){if(!(product.qty<=product.low))continue;alertCount++;let index=alerts.findIndex(item=>item.qty>product.qty);if(index<0)index=alerts.length;alerts.splice(index,0,product);if(alerts.length>5)alerts.pop()}
+ let alerts=[],alertCount=0;
+ for(let product of db.products){
+  if(!(product.qty<=product.low))continue;
+  alertCount++;
+  let index=alerts.findIndex(item=>item.qty>product.qty);
+  if(index<0)index=alerts.length;
+  alerts.splice(index,0,product);
+  if(alerts.length>5)alerts.pop();
+ }
  $("alertCount").textContent=`${alertCount} item${alertCount===1?"":"s"}`;
  $("alerts").innerHTML=alertCount?alerts.map(p=>`<div class="dashboard-alert"><div class="dashboard-alert-icon" aria-hidden="true">!</div><div class="dashboard-alert-info"><strong>${esc(p.name)}</strong><small>${p.qty===0?"Out of stock":"Low stock · alert at "+p.low}</small></div><div class="dashboard-alert-count">${p.qty} left</div></div>`).join(""):'<div class="dashboard-empty"><b>All clear</b>No products need restocking right now.</div>';
 }
@@ -4162,7 +4192,35 @@ function showUpdateBanner(){
  updateBannerShown=true;
  $("updateBanner").hidden=false;
 }
-$("updateNow").addEventListener("click",async()=>{  let button=$("updateNow");  button.disabled=true;  try{   let registration=await navigator.serviceWorker.getRegistration();   let waiting=registration&&registration.waiting;   if(!waiting){    window.location.reload();    return;   }   await new Promise((resolve,reject)=>{    let timeout=window.setTimeout(()=>{     navigator.serviceWorker.removeEventListener("controllerchange",onControllerChange);     reject(new Error("Timed out while activating the downloaded app update."));    },15000);    let onControllerChange=()=>{     window.clearTimeout(timeout);     resolve();    };    navigator.serviceWorker.addEventListener("controllerchange",onControllerChange,{once:true});    waiting.postMessage({type:"SKIP_WAITING"});   });   window.location.reload();  }catch(error){   console.error("Unable to apply the downloaded app update.",error);   button.disabled=false;   $("updateBanner").querySelector("span").textContent="The update could not be applied. Please try again.";  } });
+$("updateNow").addEventListener("click",async()=>{
+ let button=$("updateNow");
+ button.disabled=true;
+ try{
+  let registration=await navigator.serviceWorker.getRegistration();
+  let waiting=registration&&registration.waiting;
+  if(!waiting){
+   window.location.reload();
+   return;
+  }
+  await new Promise((resolve,reject)=>{
+   let timeout=window.setTimeout(()=>{
+    navigator.serviceWorker.removeEventListener("controllerchange",onControllerChange);
+    reject(new Error("Timed out while activating the downloaded app update."));
+   },15000);
+   let onControllerChange=()=>{
+    window.clearTimeout(timeout);
+    resolve();
+   };
+   navigator.serviceWorker.addEventListener("controllerchange",onControllerChange,{once:true});
+   waiting.postMessage({type:"SKIP_WAITING"});
+  });
+  window.location.reload();
+ }catch(error){
+  console.error("Unable to apply the downloaded app update.",error);
+  button.disabled=false;
+  $("updateBanner").querySelector("span").textContent="The update could not be applied. Please try again.";
+ }
+});
 function startUpdateWatcher(){
  if(!("serviceWorker" in navigator)||location.protocol==="file:")return;
  let hadController=Boolean(navigator.serviceWorker.controller);
