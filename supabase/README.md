@@ -1,6 +1,6 @@
 # Smart Business Supabase project
 
-The Smart Business V1.376 app is configured for the hosted project. The
+The Smart Business V1.382 app is configured for the hosted project. The
 `business_records` table, owner-only row-level security policies, and
 updated-at trigger are installed. Employee accounts are not synchronized.
 
@@ -20,6 +20,9 @@ secret key to browser code.
    exist yet, local business records are uploaded during first setup.
 4. On all other devices, use the same URL, Admin / Owner role, username, and
    password/access code to load the shared records.
+
+On a phone, open the same app URL and sign in with the same Admin / Owner
+username and password/access code. Google sign-in is not required.
 
 Treat the owner password as a reusable access code: anyone holding it and the
 username can access the business data. Keep backups and avoid simultaneous
