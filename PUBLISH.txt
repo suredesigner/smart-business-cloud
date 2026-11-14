@@ -1,3 +1,11 @@
+WHAT'S NEW IN V1.383
+--------------------
+EMPLOYEE DEBT SYNC AND BRANDED REPORTS
+ - Owner debt edits, payments, and deletions sync to employee cloud accounts.
+ - Employee debt pages show synced payment status and are read-only.
+ - Monthly report printouts include the saved business logo or the app logo.
+ - Show app-file download progress during automatic and manual updates.
+
 WHAT'S NEW IN V1.382
 --------------------
 SMOOTHER WINDOWS PERFORMANCE
@@ -342,26 +350,32 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.382. On a hosted HTTPS site, open the app and
+The current app release is V1.383. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account
 screen without deleting saved records.
 
 The app remains a static website. With this release's Supabase connection,
-owner business records sync through the hosted database; employee accounts
-and preferences remain local. To use the owner's business records on a phone,
-open this same site and sign in as Admin / Owner with the same username and
-private password/code. Google sign-in is not required. If using a different
-build without cloud configuration, records remain browser-local.
+owner business records sync through the hosted database. Customer debts can
+also sync read-only to employees through the shared cloud team workspace.
+Employees need their own cloud account and the owner's employee access code;
+do not share the owner's password. See supabase/README.md for the workspace
+and database migration setup. Other employee records and preferences remain
+local. To use the owner's full business records on another device, open this
+same site and sign in as Admin / Owner with the same username and private
+password/code. Google sign-in is not required. If using a different build
+without cloud configuration, records remain browser-local.
 
 CUSTOMER DEBTS (V1.350)
 
-The employee has a Customer Debts page to record what customers owe, record
-payments, edit or delete a debt, and remove a mistaken payment. Sales saved with
-the payment method "Credit / unpaid" create a debt automatically (a customer
-name is required); cancelling that sale removes its debt. The owner dashboard
-shows a read-only Customer debts section with totals owed, overdue and collected.
+The owner manages customer debts, payments, and corrections. Employees can
+view the debt list and paid status but cannot edit it. With the cloud team
+workspace connected, owner debt changes, payments, and deletions sync to
+employee accounts. Sales saved with the payment method "Credit / unpaid"
+create a debt automatically (a customer name is required); cancelling that
+sale removes its debt. The owner dashboard shows a read-only Customer debts
+section with totals owed, overdue and collected.
 
 EMPLOYEE ACCESS CODES AND OWNER PERMISSION (V1.350)
 

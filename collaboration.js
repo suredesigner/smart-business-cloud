@@ -1,5 +1,5 @@
 /*
- * Team notes and photos are stored locally in this release.
+ * Team notes, photos, and owner-managed debts sync through the team workspace.
  */
 const SUPABASE_URL = "https://ukxnahlrdydtozzeppcd.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_f40hqLQysFb1Q9BkdCnlxg_dxKUwTd9";
@@ -16,6 +16,10 @@ let teamMembers = [];
 let teamPhotoOffset = 0;
 let teamPhotosLoaded = false;
 let teamPhotosHaveMore = false;
+let teamDebtSyncTimer = 0;
+let teamDebtSyncBusy = false;
+let teamDebtSyncedAt = "";
+let teamDebtSyncedData = "";
 const teamById = id => document.getElementById(id);
 const teamUid = () => window.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
 
@@ -268,6 +272,8 @@ async function teamGetMembership() {
     teamPhotoOffset = 0;
     teamPhotosLoaded = false;
     teamPhotosHaveMore = false;
+    teamDebtSyncedAt = "";
+    teamDebtSyncedData = "";
   }
   teamCloudMember = member;
   teamCloudWorkspace = member.workspace_id;
@@ -351,12 +357,15 @@ async function teamCloudLoginFromLogin(signUp) {
     teamCloudMember = null;
     teamCloudWorkspace = null;
     teamMembers = [];
+    teamDebtSyncedAt = "";
+    teamDebtSyncedData = "";
     status.textContent = error.message || "Cloud sign-in failed. Check your connection and account details.";
   }
 }
 
 function teamUpdateCloudControls() {
   const connected = Boolean(teamCloudSession && teamCloudMember);
+  teamById("teamCloudConnectionCard").hidden = !teamHasConfig();
   teamById("teamCloudSignIn").hidden = connected;
   teamById("teamCloudSignUp").hidden = connected;
   teamById("teamCloudSignOut").hidden = !connected;
@@ -444,7 +453,7 @@ function renderTeam() {
     return;
   }
   if (teamCloudMember) {
-    teamStatus(`Connected as ${teamCloudMember.username}. Employee comments and product photos sync when online.`, "ok");
+    teamStatus(`Connected as ${teamCloudMember.username}. Customer debts, comments, and product photos sync when online.`, "ok");
   } else {
     teamStatus("Cloud is configured. Sign in with your cloud account to join this business workspace.");
   }
@@ -505,7 +514,7 @@ async function teamSignIn(signUp) {
       await teamGetMembership();
     }
     localStorage.removeItem(TEAM_PENDING_SIGNUP_KEY);
-    teamStatus(`Connected as ${teamCloudMember.username}. Team data will sync when online.`, "ok");
+    teamStatus(`Connected as ${teamCloudMember.username}. Customer debts and team data will sync when online.`, "ok");
     teamUpdateCloudControls();
     await teamUploadProductPhotos();
     await teamSyncNow();
@@ -552,21 +561,69 @@ async function teamSignOut() {
   teamCloudMember = null;
   teamCloudWorkspace = null;
   teamMembers = [];
-  if (currentRole) teamStatus("Disconnected. Offline employee comments remain saved on this device.");
+  if (currentRole) teamStatus("Disconnected. Local records remain saved on this device.");
   renderTeam();
 }
 
 async function teamSyncNow() {
   if (!teamCloudMember || !navigator.onLine) return;
   try {
+    if (teamCloudMember.role === "admin") await teamPushDebts();
     await teamPushPendingComments();
-    await Promise.all([teamLoadComments(), teamLoadPhotos()]);
+    await Promise.all([
+      teamLoadComments(),
+      teamLoadPhotos(),
+      teamCloudMember.role === "agent" ? teamLoadDebts() : Promise.resolve()
+    ]);
     teamSaveCache();
     renderTeam();
   } catch (error) {
-    console.error("Unable to sync employee notes and photos.", error);
-    teamStatus(`Offline or sync failed: ${error.message}. Employee comments remain saved on this device.`, "error");
+    console.error("Unable to sync team data.", error);
+    teamStatus(`Offline or sync failed: ${error.message}. Local records remain saved on this device.`, "error");
   }
+}
+
+async function teamPushDebts() {
+  if (!teamCloudMember || teamCloudMember.role !== "admin" ||
+    !navigator.onLine || teamDebtSyncBusy) return false;
+  const serialized = JSON.stringify(db.debts);
+  if (serialized === teamDebtSyncedData) return true;
+  teamDebtSyncBusy = true;
+  try {
+    await teamRequest("team_debt_records?on_conflict=workspace_id", {
+      method: "POST",
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: { workspace_id: teamCloudWorkspace, payload: db.debts }
+    });
+    teamDebtSyncedAt = new Date().toISOString();
+    teamDebtSyncedData = serialized;
+    return true;
+  } finally {
+    teamDebtSyncBusy = false;
+  }
+}
+
+async function teamLoadDebts() {
+  if (!teamCloudMember || teamCloudMember.role !== "agent") return;
+  const rows = await teamRequest(`team_debt_records?select=payload,updated_at&workspace_id=eq.${encodeURIComponent(teamCloudWorkspace)}&limit=1`);
+  const record = rows?.[0];
+  if (!record) return;
+  if (!Array.isArray(record.payload) ||
+    record.payload.some(debt => !debt || typeof debt !== "object" ||
+      typeof debt.id !== "string" || !Array.isArray(debt.payments))) {
+    throw new Error("The shared customer debts have an invalid format.");
+  }
+  const serialized = JSON.stringify(record.payload);
+  if (serialized === teamDebtSyncedData && record.updated_at === teamDebtSyncedAt) return;
+  const remoteIds = new Set(record.payload.map(debt => debt.id));
+  const employeeSalesDebts = db.debts.filter(debt =>
+    debt && debt.recordedBy === currentUsername && !remoteIds.has(debt.id)
+  );
+  db.debts = [...record.payload, ...employeeSalesDebts];
+  if (!save()) throw new Error("The latest customer debts could not be saved on this device.");
+  teamDebtSyncedAt = record.updated_at || "";
+  teamDebtSyncedData = serialized;
+  teamStatus("Customer debts and payment status updated from the owner.", "ok");
 }
 
 async function teamPushPendingComments() {
@@ -1107,6 +1164,15 @@ save = function () {
   if (result && businessCloudSession && !businessCloudConflict) {
     window.clearTimeout(businessCloudSyncTimer);
     businessCloudSyncTimer = window.setTimeout(businessCloudPush, 900);
+  }
+  if (result && teamCloudMember?.role === "admin") {
+    window.clearTimeout(teamDebtSyncTimer);
+    teamDebtSyncTimer = window.setTimeout(() => {
+      teamPushDebts().catch(error => {
+        console.error("Unable to sync customer debts to employee accounts.", error);
+        teamStatus(`Customer debt sync failed: ${error.message}. The owner’s records remain saved on this device.`, "error");
+      });
+    }, 900);
   }
   return result;
 };

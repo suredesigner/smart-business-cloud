@@ -495,6 +495,8 @@ select option{background:var(--panel);color:var(--text)}
 .pr h2{font-size:15px;margin:18px 0 6px;color:#000}
 .pr .pr-sub{color:#444;margin:0 0 10px;font-size:12px}
 .pr .pr-head{border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:12px}
+.pr .pr-brand{display:flex;align-items:center;gap:12px}
+.pr .pr-logo{width:58px;height:58px;flex:0 0 58px;object-fit:contain}
 .pr table{width:100%;border-collapse:collapse;margin:6px 0 12px}
 .pr th,.pr td{border:1px solid #888;padding:5px 7px;text-align:left;vertical-align:top;font-size:12px;color:#000;background:#fff}
 .pr th{background:#eee}
@@ -1025,7 +1027,7 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.382</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.383</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1072,7 +1074,7 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.382</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.383</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1359,7 +1361,7 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
 
 <section id="debts" class="page" role="tabpanel" aria-labelledby="nav-debts">
   <h1>Customer Debts</h1>
-  <p class="muted">Track what customers owe, record payments as they come in, and edit or correct any debt.</p>
+  <p class="muted" id="debtPageDescription">Track what customers owe, record payments as they come in, and edit or correct any debt.</p>
   <div class="grid dashboard-metrics">
     <div class="card dashboard-metric" style="--metric-color:#ff8293"><div class="dashboard-metric-label">Total owed</div><div class="dashboard-metric-value" id="debtOutstanding">UGX 0</div><div class="dashboard-metric-note" id="debtOutstandingNote">0 customers owe you</div></div>
     <div class="card dashboard-metric" style="--metric-color:#ffb86b"><div class="dashboard-metric-label">Overdue</div><div class="dashboard-metric-value" id="debtOverdue">UGX 0</div><div class="dashboard-metric-note" id="debtOverdueNote">0 overdue debts</div></div>
@@ -1583,7 +1585,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.382";
+const APP_VERSION="V1.383";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -2492,6 +2494,7 @@ function enter(role,username=""){
  if(activeSessionId)clearSessionPresence();
  currentRole=role;
  currentUsername=username;
+ $("debtFilter").value=role==="admin"?"open":"all";
  activeSessionId=uid();
  updateSessionPresence();
  if(sessionHeartbeatTimer)window.clearInterval(sessionHeartbeatTimer);
@@ -2797,8 +2800,10 @@ function handleUpdateWorkerMessage(event){
   $("updateProgressTitle").textContent=`Downloading ${data.version||"app update"}`;
   setUpdateProgress(data.percent,`Downloading ${data.asset||"app files"}…`,`${data.completed||0} of ${data.total||0} files cached · ${data.percent||0}%`);
  }else if(data?.type==="UPDATE_COMPLETE"){
+  $("updateProgressDialog").hidden=false;
+  $("updateProgressClose").hidden=false;
   $("updateProgressTitle").textContent=`${data.version||"App update"} downloaded`;
-  $("updateProgressSubtitle").textContent="The new app is ready. Your saved business records stay safe.";
+  $("updateProgressSubtitle").textContent="The new app files are ready to apply. Your saved business records stay safe.";
   setUpdateProgress(100,"Download complete","Activating the new app version.","complete");
  }
 }
@@ -2822,7 +2827,6 @@ async function refreshUpdates(){
   let hadController=Boolean(navigator.serviceWorker.controller);
   let registration=await navigator.serviceWorker.getRegistration();
   if(!registration)registration=await navigator.serviceWorker.register("./sw.js");
-  navigator.serviceWorker.addEventListener("message",handleUpdateWorkerMessage);
   let updateFound=Boolean(registration.installing||registration.waiting);
   registration.addEventListener("updatefound",()=>{updateFound=true});
   let controllerChanged=false;
@@ -2899,7 +2903,6 @@ async function refreshUpdates(){
    }
   }finally{
    navigator.serviceWorker.removeEventListener("controllerchange",onControllerChange);
-   navigator.serviceWorker.removeEventListener("message",handleUpdateWorkerMessage);
   }
  }catch(error){
   console.error("Unable to check for app updates.",error);
@@ -3419,8 +3422,9 @@ function debtTotals(){
  };
 }
 function debtGuard(){
- if(currentRole==="admin")return true; /* the owner can add and edit debts */
- return requireBusinessUser()&&allowedPages().includes("debts");
+ if(currentRole==="admin")return true;
+ alert("Only Admin / Owner can manage customer debts.");
+ return false;
 }
 function debtActivity(type,details){if(currentRole==="agent")addEmployeeActivity(type,details)}
 $("debtForm").addEventListener("submit",e=>{
@@ -3433,6 +3437,11 @@ $("debtForm").addEventListener("submit",e=>{
  save();e.target.reset();$("debtDate").value=today();alert("Debt saved.");
 });
 function renderDebts(){
+ let ownerView=currentRole==="admin";
+ $("debtForm").closest(".card").hidden=!ownerView;
+ $("debtPageDescription").textContent=ownerView
+  ?"Track what customers owe, record payments as they come in, and edit or correct any debt."
+  :"Customer debts are managed by the owner. Debt changes and paid status sync to this account when connected.";
  let t=debtTotals();
  $("debtOutstanding").textContent=cash(t.owed);
  $("debtOutstandingNote").textContent=`${t.customers.toLocaleString()} customer${t.customers===1?"":"s"} owe${t.customers===1?"s":""} you`;
@@ -3450,8 +3459,9 @@ function renderDebts(){
  }).sort((a,b)=>(debtBalance(b)>0)-(debtBalance(a)>0)||String(b.date).localeCompare(String(a.date)));
  $("debtList").innerHTML=list.map(d=>{
   let balance=debtBalance(d),pays=d.payments||[];
-  let history=pays.length?`<details class="debt-history"><summary>${pays.length} payment${pays.length===1?"":"s"}</summary>${pays.map(p=>`<div><span>${esc(p.date)} · ${cash(p.amount)}${p.note?" · "+esc(p.note):""}</span><button type="button" class="danger" onclick="removeDebtPayment('${d.id}','${p.id}')">Remove</button></div>`).join("")}</details>`:"";
-  return `<tr><td>${esc(d.date)}</td><td><strong>${esc(d.customer)}</strong>${d.phone?`<br><small class="muted">${esc(d.phone)}</small>`:""}${d.notes?`<br><small class="muted">${esc(d.notes)}</small>`:""}${history}</td><td>${cash(d.amount)}</td><td>${cash(debtPaid(d))}</td><td><strong>${cash(balance)}</strong></td><td>${esc(d.due||"Not set")}</td><td>${debtBadge(d)}</td><td><div class="debt-actions">${balance>0?`<button type="button" onclick="openDebtPayment('${d.id}')">Record payment</button>`:""}<button type="button" class="secondary" onclick="openDebtEdit('${d.id}')">Edit</button><button type="button" class="danger" onclick="deleteDebt('${d.id}')">Delete</button></div></td></tr>`;
+  let history=pays.length?`<details class="debt-history"><summary>${pays.length} payment${pays.length===1?"":"s"}</summary>${pays.map(p=>`<div><span>${esc(p.date)} · ${cash(p.amount)}${p.note?" · "+esc(p.note):""}</span>${ownerView?`<button type="button" class="danger" onclick="removeDebtPayment('${d.id}','${p.id}')">Remove</button>`:""}</div>`).join("")}</details>`:"";
+  let actions=ownerView?`<div class="debt-actions">${balance>0?`<button type="button" onclick="openDebtPayment('${d.id}')">Record payment</button>`:""}<button type="button" class="secondary" onclick="openDebtEdit('${d.id}')">Edit</button><button type="button" class="danger" onclick="deleteDebt('${d.id}')">Delete</button></div>`:"Owner managed";
+  return `<tr><td>${esc(d.date)}</td><td><strong>${esc(d.customer)}</strong>${d.phone?`<br><small class="muted">${esc(d.phone)}</small>`:""}${d.notes?`<br><small class="muted">${esc(d.notes)}</small>`:""}${history}</td><td>${cash(d.amount)}</td><td>${cash(debtPaid(d))}</td><td><strong>${cash(balance)}</strong></td><td>${esc(d.due||"Not set")}</td><td>${debtBadge(d)}</td><td>${actions}</td></tr>`;
  }).join("")||'<tr><td colspan="8">No debts match this view.</td></tr>';
 }
 function renderOwnerDebts(){
@@ -3695,7 +3705,8 @@ function isValidMonthlyReport(report){
   report.totals&&["revenue","cogs","gross","expenses","net","transactions","unitsSold","expenseCount"].every(key=>Number.isFinite(report.totals[key]))&&
   Array.isArray(report.daily)&&report.daily.every(day=>day&&reportDateInMonth(day.date,report.month)&&["transactions","unitsSold","revenue","cogs","expenses","net"].every(key=>Number.isFinite(day[key])))&&
   Array.isArray(report.expenseCategories)&&report.expenseCategories.every(row=>row&&typeof row.category==="string"&&Number.isFinite(row.count)&&Number.isFinite(row.amount))&&
-  typeof report.businessName==="string"&&typeof report.savedAt==="string");
+  typeof report.businessName==="string"&&typeof report.savedAt==="string"&&
+  (report.businessLogo===undefined||typeof report.businessLogo==="string"));
 }
 function readMonthlyReports(){
  let raw;
@@ -3745,6 +3756,7 @@ function buildMonthlyReport(month){
  let dailyRows=[...daily.values()].sort((a,b)=>a.date.localeCompare(b.date)).map(day=>({...day,net:day.revenue-day.cogs-day.expenses}));
  return{
   schema:1,month,businessName:String(db.business?.name||"Smart Business"),
+  businessLogo:String(db.business?.image||""),
   generatedAt:new Date().toISOString(),savedAt:"",
   totals:{
    revenue,cogs,gross:revenue-cogs,expenses:expenseTotal,net:revenue-cogs-expenseTotal,
@@ -3870,7 +3882,12 @@ function printMonthlyReport(){
  let daily=report.daily.map(day=>`<tr><td>${esc(dateLabel(day.date))}</td><td class="n">${Number(day.transactions).toLocaleString(appIntlLocale())}</td><td class="n">${Number(day.unitsSold).toLocaleString(appIntlLocale())}</td><td class="n">${cash(day.revenue)}</td><td class="n">${cash(day.cogs)}</td><td class="n">${cash(day.expenses)}</td><td class="n">${cash(day.net)}</td></tr>`).join("")||'<tr><td colspan="7">No sales or expenses recorded for this month.</td></tr>';
  let expenseRows=report.expenseCategories.map(row=>`<tr><td>${esc(row.category)}</td><td class="n">${Number(row.count).toLocaleString(appIntlLocale())}</td><td class="n">${cash(row.amount)}</td></tr>`).join("")||'<tr><td colspan="3">No expenses recorded this month.</td></tr>';
  let saved=report.savedAt?`Saved ${esc(reportDateTime(report.savedAt))}`:"Live records · not saved";
- let reportHeader=`<div class="pr-head"><h1>${esc(report.businessName||"Smart Business")}</h1><div><strong>Monthly business report</strong></div><div class="pr-sub">${esc(reportMonthLabel(report.month))}</div></div>`;
+ let businessLogo=typeof report.businessLogo==="string"&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(report.businessLogo)
+  ?report.businessLogo
+  :typeof db.business?.image==="string"&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(db.business.image)
+   ?db.business.image
+   :"./icons/smart-business.svg";
+ let reportHeader=`<div class="pr-head"><div class="pr-brand"><img class="pr-logo" src="${esc(businessLogo)}" alt=""><div><h1>${esc(report.businessName||"Smart Business")}</h1><div><strong>Monthly business report</strong></div><div class="pr-sub">${esc(reportMonthLabel(report.month))}</div></div></div></div>`;
  let html=`<div class="pr">${reportHeader}
   <p>${esc(saved)}</p><h2>Monthly summary</h2><table><tbody>${summary}</tbody></table>
   <h2>Daily performance</h2><table><thead><tr><th>Date</th><th class="n">Transactions</th><th class="n">Units sold</th><th class="n">Revenue</th><th class="n">Item cost</th><th class="n">Expenses</th><th class="n">Estimated net profit</th></tr></thead><tbody>${daily}</tbody></table>
@@ -4356,6 +4373,7 @@ $("updateNow").addEventListener("click",async()=>{
 });
 function startUpdateWatcher(){
  if(!("serviceWorker" in navigator)||location.protocol==="file:")return;
+ navigator.serviceWorker.addEventListener("message",handleUpdateWorkerMessage);
  let hadController=Boolean(navigator.serviceWorker.controller);
  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hadController)showUpdateBanner()});
  navigator.serviceWorker.register("./sw.js").then(registration=>{

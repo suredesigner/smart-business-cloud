@@ -1,13 +1,34 @@
 # Smart Business Supabase project
 
-The Smart Business V1.381 app is configured for the hosted project. The
-`business_records` table, owner-only row-level security policies, and
-updated-at trigger are installed. Employee accounts are not synchronized.
+The Smart Business V1.383 app uses the hosted project. The
+`business_records` table keeps full business records owner-only. The
+`team_debt_records` table shares customer debts with members of the owner's
+team workspace; employees can read the debt and payment status, but only an
+owner can publish changes.
 
 The project's public publishable key is configured in `collaboration.js`.
 It is a client-safe key; database access relies on the migration's
 row-level-security policies and Supabase Auth. Never add a service-role or
 secret key to browser code.
+
+## Sync debts to employee accounts
+
+1. Apply `supabase/migrations/20261113000000_employee_debt_sync.sql` to the
+   linked project. It relies on the existing `team_members` workspace table
+   used by the app's cloud employee access-code flow.
+2. Sign in as Admin / Owner and connect the owner account to the team cloud
+   workspace from **Employee notes**. If needed, create the cloud workspace.
+3. Use **Create employee access code** and share the code with each employee.
+   The employee signs up for a cloud account with their own email and password
+   and joins that workspace with the code.
+4. Once connected, owner edits, payments, and deletions are published to the
+   workspace. Employee accounts see the latest debt and paid status when
+   online; their debt view is read-only. Their local sales and other records
+   remain separate.
+
+The employee membership is enforced by row-level security: workspace members
+can read the snapshot, while only an Admin / Owner member can write it. The
+employee's cloud account must match their Employee / Agent app account.
 
 ## Use the connected app
 
@@ -18,8 +39,11 @@ secret key to browser code.
 3. On the first device, create an Admin / Owner account using the intended
    username and a unique private password/access code. If a cloud row does not
    exist yet, local business records are uploaded during first setup.
-4. On all other devices, use the same URL, Admin / Owner role, username, and
+4. On other owner devices, use the same URL, Admin / Owner role, username, and
    password/access code to load the shared records.
+5. To share customer debts with employees, follow **Sync debts to employee
+   accounts** above. Owner cloud sign-in and employee workspace membership are
+   separate; do not share the owner's password with employees.
 
 On a phone, open the same app URL and sign in with the same Admin / Owner
 username and password/access code. Google sign-in is not required.
@@ -56,7 +80,7 @@ than silently overwriting cloud data.
    service-role or secret key in browser code.
 7. Publish the entire app folder to its existing HTTPS website.
 
-The app's reusable boss code is the owner's cloud password: the owner enters
+The app's reusable owner code is the owner's cloud password: the owner enters
 their username and the same code in the password field on every device. Use a
 unique code of at least 12 characters and keep it private. Anyone with the
 username and code can access that owner's cloud records.
@@ -80,7 +104,9 @@ project. To publish database changes, link a hosted project and run
 
 ## Security
 
-The migration enables row-level security and allows an authenticated user to
-read or change only the row whose `user_id` matches their Supabase user ID.
+The migrations enable row-level security. Owner business records are restricted
+to the matching owner account. Shared employee debt snapshots are readable by
+workspace members and writable only by workspace owners. The debt migration
+expects the existing `team_members` table to be present in the linked project.
 Keep the public anon key only in the client; do not expose service-role keys.
 This project scaffold does not create a hosted Supabase account or project.
