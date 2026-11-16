@@ -1027,7 +1027,7 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.383</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.384</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1074,7 +1074,7 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.383</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.384</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1585,7 +1585,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.383";
+const APP_VERSION="V1.384";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -2490,7 +2490,7 @@ function stopBusinessWelcome(){
  intro.dataset.running="false";
  $("introProgressBar").style.width="0%";
 }
-function enter(role,username=""){
+function speakAppMessage(message){if(!("speechSynthesis" in window)||typeof SpeechSynthesisUtterance==="undefined")return;let utterance=new SpeechSynthesisUtterance(message),locale=APP_LANGUAGES[activeAppLanguage]||"en-UG",language=locale.split("-")[0].toLowerCase();utterance.lang=locale;utterance.rate=0.95;let matchingVoices=window.speechSynthesis.getVoices().filter(voice=>voice.lang.toLowerCase().split("-")[0]===language);utterance.voice=matchingVoices.find(voice=>/siri/i.test(voice.name))||matchingVoices.find(voice=>voice.default)||matchingVoices[0]||null;window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance);}function speakRoleWelcome(role,username){let messages={en:{admin:"Welcome, "+username+". You are signed in as Admin and Owner.",agent:"Welcome, "+username+". You are signed in as Employee and Agent."},sw:{admin:"Karibu, "+username+". Umeingia kama Msimamizi na Mmiliki.",agent:"Karibu, "+username+". Umeingia kama Mfanyakazi na Wakala."},lg:{admin:"Tukusanyukidde, "+username+". Oyingidde nga Muddukanya era Nannyini.",agent:"Tukusanyukidde, "+username+". Oyingidde nga Mukozi era Mubaka."},ar:{admin:"مرحبًا "+username+". لقد سجلت الدخول بصفتك المسؤول والمالك.",agent:"مرحبًا "+username+". لقد سجلت الدخول بصفتك الموظف والوكيل."},fr:{admin:"Bienvenue, "+username+". Vous êtes connecté en tant qu’administrateur et propriétaire.",agent:"Bienvenue, "+username+". Vous êtes connecté en tant qu’employé et agent."},de:{admin:"Willkommen, "+username+". Sie sind als Admin und Inhaber angemeldet.",agent:"Willkommen, "+username+". Sie sind als Mitarbeiter und Vertreter angemeldet."}};let language=messages[activeAppLanguage]||messages.en;speakAppMessage(language[role]||language.admin);}function speakRoleGoodbye(role,username){let messages={en:"Goodbye, "+username+". See you next time.",sw:"Kwaheri, "+username+". Tuonane tena.",lg:"Weeraba, "+username+". Tuliddemu okulaba.",ar:"إلى اللقاء يا "+username+". نراك مرة أخرى.",fr:"Au revoir, "+username+". À la prochaine.",de:"Auf Wiedersehen, "+username+". Bis zum nächsten Mal."};if(["admin","agent"].includes(role))speakAppMessage(messages[activeAppLanguage]||messages.en);}function enter(role,username=""){
  if(activeSessionId)clearSessionPresence();
  currentRole=role;
  currentUsername=username;
@@ -2507,9 +2507,9 @@ function enter(role,username=""){
  $("application").classList.remove("hidden");
  setDates();
  scheduleRenderAll();
- smartBusinessWelcome();
+ smartBusinessWelcome();speakRoleWelcome(role,username);
 }
-function returnToLogin(){
+function returnToLogin(){speakRoleGoodbye(currentRole,currentUsername);
  stopBusinessWelcome();
  closeNotifyPanel();
  if(sessionHeartbeatTimer)window.clearInterval(sessionHeartbeatTimer);
