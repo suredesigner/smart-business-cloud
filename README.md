@@ -1,6 +1,6 @@
 # Smart Business Supabase project
 
-The Smart Business V1.383 app uses the hosted project. The
+The Smart Business V1.384 app uses the hosted project. The
 `business_records` table keeps full business records owner-only. The
 `team_debt_records` table shares customer debts with members of the owner's
 team workspace; employees can read the debt and payment status, but only an
