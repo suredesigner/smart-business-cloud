@@ -1,3 +1,10 @@
+WHAT'S NEW IN V1.384
+--------------------
+MULTILINGUAL VOICE GREETINGS
+ - Welcome and goodbye messages are spoken for each account role.
+ - Speech follows the selected app language and prefers an available Siri
+   voice, with a matching system voice as fallback.
+
 WHAT'S NEW IN V1.383
 --------------------
 EMPLOYEE DEBT SYNC AND BRANDED REPORTS
@@ -350,7 +357,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.383. On a hosted HTTPS site, open the app and
+The current app release is V1.384. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account
