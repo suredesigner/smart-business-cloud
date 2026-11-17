@@ -1,3 +1,27 @@
+WHAT'S NEW IN V1.387
+--------------------
+FASTER PRODUCT CATALOGUE AND DASHBOARD
+ - Defer rendering work for offscreen product and stock cards.
+ - Load owner dashboard product images lazily and decode them asynchronously.
+ - Remove costly backdrop blur from repeated cards while keeping glass styling
+   on the main dashboard surfaces.
+
+WHAT'S NEW IN V1.386
+--------------------
+EMPLOYEE BUSINESS PROFILE AND LIQUID DASHBOARD
+ - Employees can save the business location and shop number with the
+   business name and logo in their profile.
+ - Make dashboard status cards larger and enhance the liquid-glass surfaces.
+ - Profile changes are included in the signed-in account's existing cloud
+   record when cloud sync is connected.
+
+WHAT'S NEW IN V1.385
+--------------------
+SIRI / BIXBY-STYLE VOICE SELECTION
+ - Prefer installed Siri or Bixby voices matching the selected app language.
+ - Use a calm assistant-like pace and pitch with a matching system-voice
+   fallback when those voices are unavailable.
+
 WHAT'S NEW IN V1.384
 --------------------
 MULTILINGUAL VOICE GREETINGS
@@ -357,7 +381,7 @@ UPDATES KEEP YOUR RECORDS
 
 APP UPDATES
 
-The current app release is V1.384. On a hosted HTTPS site, open the app and
+The current app release is V1.387. On a hosted HTTPS site, open the app and
 press Updates to check for and apply the newest hosted app files. A new
 version reloads the page while preserving the records already saved in that
 browser. The back-arrow Login button signs out and returns to the account

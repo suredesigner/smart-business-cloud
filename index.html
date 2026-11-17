@@ -245,7 +245,7 @@ th{color:var(--muted)}.tablewrap{overflow:auto}
 .business-profile-heading strong,.business-profile-heading small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .business-profile-heading strong{font-size:14px}
 .business-profile-heading small{margin-top:4px;color:var(--muted);font-size:11px}
-.business-profile-fields{display:grid;grid-template-columns:minmax(120px,1fr) minmax(125px,1fr);gap:10px;align-items:end}
+.business-profile-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:end}
 .business-profile-fields label{margin:0 0 5px;font-size:10px}
 .business-profile-fields input{padding:9px;font-size:12px}
 .business-profile-actions{display:flex;align-items:center;gap:7px}
@@ -867,13 +867,60 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .report-month-actions button{min-width:0;padding:10px 8px;font-size:12px}
   .report-month-metrics{gap:9px}
 }
-html.windows-performance header,html.windows-performance nav,html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none}
-html.windows-performance header{background:var(--bg)}
-html.windows-performance nav{background:var(--panel-deep)}
-html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{background:var(--panel)}
+html.windows-performance header,html.windows-performance nav,html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{-webkit-backdrop-filter:blur(8px) saturate(145%)!important;backdrop-filter:blur(8px) saturate(145%)!important;box-shadow:0 8px 20px rgba(0,0,0,.14),inset 0 1px 0 var(--liquid-shine)}
+html.windows-performance header{background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 74%,var(--liquid-fill)),color-mix(in srgb,var(--panel-deep) 78%,transparent))}
+html.windows-performance nav{background:linear-gradient(155deg,color-mix(in srgb,var(--liquid-shine) 14%,transparent),color-mix(in srgb,var(--panel-deep) 74%,transparent))}
+html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 74%,var(--liquid-fill)),color-mix(in srgb,var(--panel-deep) 78%,transparent))}
 html.windows-performance .product-card{content-visibility:auto;contain-intrinsic-size:auto 360px}
 html.windows-performance .card,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .product-card,html.windows-performance button{transition:none!important}
 html.windows-performance .card:hover,html.windows-performance .dashboard-panel:hover,html.windows-performance .dashboard-metric:hover,html.windows-performance .product-card:hover{transform:none;box-shadow:none}
+/* Stronger liquid-glass depth on the employee and owner dashboards. */
+:root{--liquid-fill:rgba(222,239,255,.2);--liquid-edge:rgba(228,243,255,.42);--liquid-shine:rgba(255,255,255,.62);--liquid-shadow:0 20px 52px rgba(0,0,0,.24)}
+header,.dashboard-toolbar,.dashboard-panel,.dashboard-metric,.business-profile,.product-card,.settings-popover,.notify-panel,.update-banner,.modal-overlay .stock-adjust-dialog,#login{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 68%,var(--liquid-fill)),color-mix(in srgb,var(--panel-deep) 68%,transparent));
+  border-color:var(--liquid-edge);
+  box-shadow:var(--liquid-shadow),inset 0 1px 0 var(--liquid-shine),inset 0 -1px 0 rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(22px) saturate(185%);
+  backdrop-filter:blur(22px) saturate(185%);
+}
+.dashboard-hero,.dashboard-panel,.dashboard-metric,.business-profile{ -webkit-backdrop-filter:blur(26px) saturate(195%);backdrop-filter:blur(26px) saturate(195%) }
+.dashboard-hero{background:radial-gradient(ellipse at 86% 12%,color-mix(in srgb,var(--blue) 28%,transparent),transparent 42%),linear-gradient(145deg,color-mix(in srgb,var(--panel) 68%,var(--liquid-fill)),color-mix(in srgb,var(--panel-deep) 70%,transparent))}
+.business-profile:after,.dashboard-panel:after,.dashboard-metric:after{background:linear-gradient(125deg,rgba(255,255,255,.12),transparent 38%,transparent 68%,rgba(255,255,255,.04));opacity:.9}
+.dashboard-metric{min-height:150px;padding:24px 23px 21px}
+.dashboard-metric-label{font-size:12px}
+.dashboard-metric-value{margin-top:19px;font-size:clamp(25px,2.7vw,36px)}
+.dashboard-metric-note{margin-top:8px;font-size:11px}
+:root[data-theme="light"] .dashboard-hero,:root[data-theme="light"] .business-profile,:root[data-theme="light"] .dashboard-panel,:root[data-theme="light"] .dashboard-metric{
+  background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(226,238,251,.48));
+  box-shadow:0 20px 46px rgba(37,71,112,.15),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(66,111,161,.08);
+  -webkit-backdrop-filter:blur(26px) saturate(185%);
+  backdrop-filter:blur(26px) saturate(185%);
+}
+@media(max-width:900px),(pointer:coarse){
+  header,nav,.dashboard-hero,.dashboard-toolbar,.dashboard-panel,.dashboard-metric,.business-profile,.product-card,.settings-popover,.notify-panel,.update-banner,.modal-overlay .stock-adjust-dialog,#login,button.secondary{
+    -webkit-backdrop-filter:blur(12px) saturate(165%);
+    backdrop-filter:blur(12px) saturate(165%);
+  }
+  .dashboard-hero,.dashboard-panel,.dashboard-metric,.business-profile{-webkit-backdrop-filter:blur(16px) saturate(175%);backdrop-filter:blur(16px) saturate(175%)}
+  .dashboard-hero{min-height:190px;padding:24px}
+  .dashboard-metric{min-height:128px;padding:17px}
+  .dashboard-metric-value{margin-top:15px;font-size:clamp(20px,5.5vw,27px)}
+  :root[data-theme="light"] .dashboard-hero,:root[data-theme="light"] .business-profile,:root[data-theme="light"] .dashboard-panel,:root[data-theme="light"] .dashboard-metric{-webkit-backdrop-filter:blur(16px) saturate(175%);backdrop-filter:blur(16px) saturate(175%)}
+}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .dashboard-hero,.dashboard-panel,.dashboard-metric,.business-profile{background:var(--panel)}
+}
+html.windows-performance header,html.windows-performance nav,html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{
+  -webkit-backdrop-filter:blur(8px) saturate(145%)!important;
+  backdrop-filter:blur(8px) saturate(145%)!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.14),inset 0 1px 0 var(--liquid-shine);
+}
+html.windows-performance header,html.windows-performance nav,html.windows-performance .dashboard-hero,html.windows-performance .dashboard-toolbar,html.windows-performance .dashboard-panel,html.windows-performance .dashboard-metric,html.windows-performance .business-profile,html.windows-performance .product-card,html.windows-performance .settings-popover,html.windows-performance .notify-panel,html.windows-performance .update-banner,html.windows-performance .modal-overlay .stock-adjust-dialog,html.windows-performance #login,html.windows-performance button.secondary{background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 74%,var(--liquid-fill)),color-mix(in srgb,var(--panel-deep) 78%,transparent))}
+/* Keep glass depth on major surfaces without blurring every repeated row. */
+.product-card{content-visibility:auto;contain-intrinsic-size:auto 420px;box-shadow:0 8px 18px rgba(0,0,0,.13),inset 0 1px 0 var(--liquid-shine);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.owner-stock-row{content-visibility:auto;contain-intrinsic-size:auto 84px}
+.product-stock-badge,.product-card .secondary,.product-card .danger,.owner-stock-row,.item,.due-row,.team-status,.team-photo,.auto-theme-row,.theme-option{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html.windows-performance .product-card{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 </style>
 </head>
 <body>
@@ -1027,7 +1074,7 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.384</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.387</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1074,7 +1121,7 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.384</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.387</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1083,12 +1130,14 @@ html.windows-performance .card:hover,html.windows-performance .dashboard-panel:h
   <form id="businessProfileForm" class="business-profile">
     <div class="business-profile-identity">
       <div class="business-avatar" id="businessAvatar" aria-label="Business profile picture">SB</div>
-      <div class="business-profile-heading"><span class="business-profile-title">Business profile</span><strong id="businessDisplayName">Your business</strong><small id="businessProfileDescription">Add your business name and profile picture to personalize your workspace.</small></div>
+      <div class="business-profile-heading"><span class="business-profile-title">Business profile</span><strong id="businessDisplayName">Your business</strong><small id="businessProfileDescription">Add your business name, location, shop number, and business logo to personalize your workspace.</small></div>
     </div>
     <div class="business-profile-fields">
       <div><label for="businessName">Business name</label><input id="businessName" maxlength="60" placeholder="e.g. Sunrise Boutique"></div>
-      <div><label for="businessImage">Profile picture</label><input id="businessImage" type="file" accept="image/*"></div>
-      <p class="business-profile-hint">Your name and picture are saved in this browser. Images are resized before saving.</p>
+        <div><label for="businessLocation">Business location</label><input id="businessLocation" maxlength="120" autocomplete="street-address" placeholder="e.g. Kampala Central"></div>
+        <div><label for="businessShopNumber">Shop number</label><input id="businessShopNumber" maxlength="40" placeholder="e.g. Shop 12"></div>
+        <div><label for="businessImage">Business logo / picture</label><input id="businessImage" type="file" accept="image/*"></div>
+        <p class="business-profile-hint">Your location, shop number, and business logo are saved together in this profile.</p>
     </div>
     <p class="business-profile-status" id="businessProfileStatus" role="status" aria-live="polite"></p>
     <div class="business-profile-actions">
@@ -1585,7 +1634,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.384";
+const APP_VERSION="V1.387";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -1618,9 +1667,16 @@ const APP_TRANSLATIONS={
  "Statistics":{sw:"Takwimu",lg:"Ebibalo",ar:"الإحصاءات",fr:"Statistiques",de:"Statistiken"},
  "Business profile":{sw:"Wasifu wa Biashara",lg:"Ebikwata ku Kikolwa",ar:"ملف النشاط التجاري",fr:"Profil de l’entreprise",de:"Unternehmensprofil"},
  "Your business":{sw:"Biashara yako",lg:"Eby'obusuubuzi bwo",ar:"نشاطك التجاري",fr:"Votre entreprise",de:"Ihr Unternehmen"},
- "Add your business name and profile picture to personalize your workspace.":{sw:"Ongeza jina la biashara na picha ya wasifu ili kubinafsisha eneo lako la kazi.",lg:"Yongerako erinnya ly'ekikolwa n'ekifaananyi okukyusa ekifo kyo eky'okukoleramu.",ar:"أضف اسم نشاطك التجاري وصورة الملف الشخصي لتخصيص مساحة عملك.",fr:"Ajoutez le nom et la photo de votre entreprise pour personnaliser votre espace.",de:"Fügen Sie den Namen und das Profilbild Ihres Unternehmens hinzu, um Ihren Arbeitsbereich anzupassen."},
+ "Add your business name, location, shop number, and business logo to personalize your workspace.":{sw:"Ongeza jina la biashara, mahali, namba ya duka na nembo ya biashara ili kubinafsisha eneo lako la kazi.",lg:"Yongerako erinnya ly'ekikolwa, ekifo, namba y'edduuka n'akabonero okuteekateeka ekifo kyo eky'okukoleramu.",ar:"أضف اسم نشاطك وموقعه ورقم المتجر وشعاره لتخصيص مساحة عملك.",fr:"Ajoutez le nom, l’emplacement, le numéro de boutique et le logo de votre entreprise pour personnaliser votre espace.",de:"Fügen Sie Unternehmensname, Standort, Shopnummer und Logo hinzu, um Ihren Arbeitsbereich zu personalisieren."},
  "Business name":{sw:"Jina la Biashara",lg:"Erinnya ly'Ekikolwa",ar:"اسم النشاط التجاري",fr:"Nom de l’entreprise",de:"Unternehmensname"},
- "Profile picture":{sw:"Picha ya Wasifu",lg:"Ekifaananyi kya Profaayi",ar:"صورة الملف الشخصي",fr:"Photo de profil",de:"Profilbild"},
+ "Business location":{sw:"Mahali pa biashara",lg:"Ekifo ky'ekikolwa",ar:"موقع النشاط التجاري",fr:"Emplacement de l’entreprise",de:"Standort des Unternehmens"},
+ "Shop number":{sw:"Namba ya duka",lg:"Namba y'edduuka",ar:"رقم المتجر",fr:"Numéro de boutique",de:"Shopnummer"},
+ "Business logo / picture":{sw:"Nembo / picha ya biashara",lg:"Akabonero / ekifaananyi ky'ekikolwa",ar:"شعار النشاط / صورته",fr:"Logo / photo de l’entreprise",de:"Geschäftslogo / -bild"},
+ "e.g. Kampala Central":{sw:"mf. Kampala Central",lg:"ng'ekyokulabirako Kampala Central",ar:"مثال: Kampala Central",fr:"ex. Kampala Central",de:"z. B. Kampala Central"},
+ "e.g. Shop 12":{sw:"mf. Duka 12",lg:"ng'ekyokulabirako Edduuka 12",ar:"مثال: المتجر 12",fr:"ex. Boutique 12",de:"z. B. Shop 12"},
+ "Your location, shop number, and business logo are saved together in this profile.":{sw:"Mahali, namba ya duka na nembo ya biashara vinahifadhiwa pamoja kwenye wasifu huu.",lg:"Ekifo, namba y'edduuka n'akabonero by'ekikolwa biterekebwa wamu mu profaayi eno.",ar:"يُحفظ الموقع ورقم المتجر وشعار النشاط معًا في هذا الملف.",fr:"L’emplacement, le numéro de boutique et le logo sont enregistrés ensemble dans ce profil.",de:"Standort, Shopnummer und Geschäftslogo werden gemeinsam in diesem Profil gespeichert."},
+ "Your business profile is saved on this device.":{sw:"Wasifu wa biashara yako umehifadhiwa kwenye kifaa hiki.",lg:"Profaayi y'ekikolwa kyo eterekeddwa ku kyuma kino.",ar:"تم حفظ ملف نشاطك التجاري على هذا الجهاز.",fr:"Le profil de votre entreprise est enregistré sur cet appareil.",de:"Ihr Unternehmensprofil wurde auf diesem Gerät gespeichert."},
+ "Business profile saved.":{sw:"Wasifu wa biashara umehifadhiwa.",lg:"Profaayi y'ekikolwa eterekeddwa.",ar:"تم حفظ ملف النشاط التجاري.",fr:"Profil de l’entreprise enregistré.",de:"Unternehmensprofil gespeichert."},
  "Save profile":{sw:"Hifadhi Wasifu",lg:"Tereka Profaayi",ar:"حفظ الملف الشخصي",fr:"Enregistrer le profil",de:"Profil speichern"},
  "Remove photo":{sw:"Ondoa Picha",lg:"Gyawo Ekifaananyi",ar:"إزالة الصورة",fr:"Supprimer la photo",de:"Foto entfernen"},
  "Your business at a glance":{sw:"Muhtasari wa biashara yako",lg:"Eby'obusuubuzi bwo mu bufunze",ar:"لمحة عن نشاطك التجاري",fr:"Votre entreprise en un coup d’œil",de:"Ihr Unternehmen auf einen Blick"},
@@ -2012,7 +2068,7 @@ let activeAppLanguage="en";
 let introAnimationFrame=0;
 let introTimeouts=[];
 let renderScheduled=false;
-let db={products:[],sales:[],stock:[],expenses:[],customers:[],debts:[],business:{name:"",image:""}};
+let db={products:[],sales:[],stock:[],expenses:[],customers:[],debts:[],business:{name:"",image:"",location:"",shopNumber:""}};
 let currentRole="";
 let currentUsername="";
 let accountMode="login";
@@ -2070,7 +2126,7 @@ function load(){
   return false;
  }
  if(!saved){
-  db={products:[],sales:[],stock:[],expenses:[],customers:[],debts:[],activities:[],business:{name:"",image:""}};
+  db={products:[],sales:[],stock:[],expenses:[],customers:[],debts:[],activities:[],business:{name:"",image:"",location:"",shopNumber:""}};
   return true;
  }
  try{
@@ -2092,7 +2148,9 @@ function load(){
   db.debts=(Array.isArray(data.debts)?data.debts:[]).filter(d=>d&&typeof d==="object").map(d=>({...d,payments:Array.isArray(d.payments)?d.payments.filter(x=>x&&Number(x.amount)>0):[]}));
   db.business={
    name:typeof data.business?.name==="string"?data.business.name.slice(0,60):"",
-   image:typeof data.business?.image==="string"&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(data.business.image)?data.business.image:""
+   image:typeof data.business?.image==="string"&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(data.business.image)?data.business.image:"",
+   location:typeof data.business?.location==="string"?data.business.location.slice(0,120):"",
+   shopNumber:typeof data.business?.shopNumber==="string"?data.business.shopNumber.slice(0,40):""
   };
   return true;
  }catch(error){
@@ -2490,7 +2548,41 @@ function stopBusinessWelcome(){
  intro.dataset.running="false";
  $("introProgressBar").style.width="0%";
 }
-function speakAppMessage(message){if(!("speechSynthesis" in window)||typeof SpeechSynthesisUtterance==="undefined")return;let utterance=new SpeechSynthesisUtterance(message),locale=APP_LANGUAGES[activeAppLanguage]||"en-UG",language=locale.split("-")[0].toLowerCase();utterance.lang=locale;utterance.rate=0.95;let matchingVoices=window.speechSynthesis.getVoices().filter(voice=>voice.lang.toLowerCase().split("-")[0]===language);utterance.voice=matchingVoices.find(voice=>/siri/i.test(voice.name))||matchingVoices.find(voice=>voice.default)||matchingVoices[0]||null;window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance);}function speakRoleWelcome(role,username){let messages={en:{admin:"Welcome, "+username+". You are signed in as Admin and Owner.",agent:"Welcome, "+username+". You are signed in as Employee and Agent."},sw:{admin:"Karibu, "+username+". Umeingia kama Msimamizi na Mmiliki.",agent:"Karibu, "+username+". Umeingia kama Mfanyakazi na Wakala."},lg:{admin:"Tukusanyukidde, "+username+". Oyingidde nga Muddukanya era Nannyini.",agent:"Tukusanyukidde, "+username+". Oyingidde nga Mukozi era Mubaka."},ar:{admin:"مرحبًا "+username+". لقد سجلت الدخول بصفتك المسؤول والمالك.",agent:"مرحبًا "+username+". لقد سجلت الدخول بصفتك الموظف والوكيل."},fr:{admin:"Bienvenue, "+username+". Vous êtes connecté en tant qu’administrateur et propriétaire.",agent:"Bienvenue, "+username+". Vous êtes connecté en tant qu’employé et agent."},de:{admin:"Willkommen, "+username+". Sie sind als Admin und Inhaber angemeldet.",agent:"Willkommen, "+username+". Sie sind als Mitarbeiter und Vertreter angemeldet."}};let language=messages[activeAppLanguage]||messages.en;speakAppMessage(language[role]||language.admin);}function speakRoleGoodbye(role,username){let messages={en:"Goodbye, "+username+". See you next time.",sw:"Kwaheri, "+username+". Tuonane tena.",lg:"Weeraba, "+username+". Tuliddemu okulaba.",ar:"إلى اللقاء يا "+username+". نراك مرة أخرى.",fr:"Au revoir, "+username+". À la prochaine.",de:"Auf Wiedersehen, "+username+". Bis zum nächsten Mal."};if(["admin","agent"].includes(role))speakAppMessage(messages[activeAppLanguage]||messages.en);}function enter(role,username=""){
+function speakAppMessage(message){
+ if(!("speechSynthesis" in window)||typeof SpeechSynthesisUtterance==="undefined")return;
+ let utterance=new SpeechSynthesisUtterance(message),locale=APP_LANGUAGES[activeAppLanguage]||"en-UG",language=locale.split("-")[0].toLowerCase();
+ utterance.lang=locale;
+ utterance.rate=0.94;
+ utterance.pitch=1.03;
+ let matchingVoices=window.speechSynthesis.getVoices().filter(voice=>voice.lang.toLowerCase().split("-")[0]===language);
+ utterance.voice=matchingVoices.find(voice=>/siri|bixby/i.test(voice.name))||matchingVoices.find(voice=>voice.default)||matchingVoices[0]||null;
+ window.speechSynthesis.cancel();
+ window.speechSynthesis.speak(utterance);
+}
+function speakRoleWelcome(role,username){
+ let messages={
+  en:{admin:`Welcome, ${username}. You are signed in as Admin and Owner.`,agent:`Welcome, ${username}. You are signed in as Employee and Agent.`},
+  sw:{admin:`Karibu, ${username}. Umeingia kama Msimamizi na Mmiliki.`,agent:`Karibu, ${username}. Umeingia kama Mfanyakazi na Wakala.`},
+  lg:{admin:`Tukusanyukidde, ${username}. Oyingidde nga Muddukanya era Nannyini.`,agent:`Tukusanyukidde, ${username}. Oyingidde nga Mukozi era Mubaka.`},
+  ar:{admin:`مرحبًا ${username}. لقد سجلت الدخول بصفتك المسؤول والمالك.`,agent:`مرحبًا ${username}. لقد سجلت الدخول بصفتك الموظف والوكيل.`},
+  fr:{admin:`Bienvenue, ${username}. Vous êtes connecté en tant qu’administrateur et propriétaire.`,agent:`Bienvenue, ${username}. Vous êtes connecté en tant qu’employé et agent.`},
+  de:{admin:`Willkommen, ${username}. Sie sind als Admin und Inhaber angemeldet.`,agent:`Willkommen, ${username}. Sie sind als Mitarbeiter und Vertreter angemeldet.`}
+ };
+ let language=messages[activeAppLanguage]||messages.en;
+ speakAppMessage(language[role]||language.admin);
+}
+function speakRoleGoodbye(role,username){
+ let messages={
+  en:`Goodbye, ${username}. See you next time.`,
+  sw:`Kwaheri, ${username}. Tuonane tena.`,
+  lg:`Weeraba, ${username}. Tuliddemu okulaba.`,
+  ar:`إلى اللقاء يا ${username}. نراك مرة أخرى.`,
+  fr:`Au revoir, ${username}. À la prochaine.`,
+  de:`Auf Wiedersehen, ${username}. Bis zum nächsten Mal.`
+ };
+ if(["admin","agent"].includes(role))speakAppMessage(messages[activeAppLanguage]||messages.en);
+}
+function enter(role,username=""){
  if(activeSessionId)clearSessionPresence();
  currentRole=role;
  currentUsername=username;
@@ -2507,9 +2599,11 @@ function speakAppMessage(message){if(!("speechSynthesis" in window)||typeof Spee
  $("application").classList.remove("hidden");
  setDates();
  scheduleRenderAll();
- smartBusinessWelcome();speakRoleWelcome(role,username);
+ smartBusinessWelcome();
+ speakRoleWelcome(role,username);
 }
-function returnToLogin(){speakRoleGoodbye(currentRole,currentUsername);
+function returnToLogin(){
+ speakRoleGoodbye(currentRole,currentUsername);
  stopBusinessWelcome();
  closeNotifyPanel();
  if(sessionHeartbeatTimer)window.clearInterval(sessionHeartbeatTimer);
@@ -2958,15 +3052,23 @@ function showBusinessImage(container,image,fallback){
 }
 function renderBusinessProfile(){
  let businessName=db.business.name.trim();
+ let businessLocation=db.business.location.trim();
+ let shopNumber=db.business.shopNumber.trim();
  let name=businessName||"Your business";
- let profileComplete=Boolean(businessName||db.business.image);
+ let profileComplete=Boolean(businessName||db.business.image||businessLocation||shopNumber);
+ let profileDetails=[
+  businessLocation&&`${translateAppText("Business location",activeAppLanguage)}: ${businessLocation}`,
+  shopNumber&&`${translateAppText("Shop number",activeAppLanguage)}: ${shopNumber}`
+ ].filter(Boolean).join(" · ");
  $("businessProfileForm").classList.toggle("is-complete",profileComplete);
  $("editBusinessProfile").hidden=!profileComplete;
  $("businessDisplayName").textContent=name;
  $("businessProfileDescription").textContent=profileComplete
-  ?"Your business profile is saved on this device."
-  :"Add your business name and profile picture to personalize your workspace.";
+  ?profileDetails||translateAppText("Your business profile is saved on this device.",activeAppLanguage)
+  :translateAppText("Add your business name, location, shop number, and business logo to personalize your workspace.",activeAppLanguage);
  if(document.activeElement!==$("businessName"))$("businessName").value=db.business.name;
+ if(document.activeElement!==$("businessLocation"))$("businessLocation").value=db.business.location;
+ if(document.activeElement!==$("businessShopNumber"))$("businessShopNumber").value=db.business.shopNumber;
  let initials=profileInitials(db.business.name);
  showBusinessImage($("businessAvatar"),businessImageRemoved?"":pendingBusinessImage||db.business.image,initials);
 }
@@ -3043,14 +3145,16 @@ $("businessProfileForm").addEventListener("submit",event=>{
  let previous=db.business;
  db.business={
   name:$("businessName").value.trim(),
-  image:pendingBusinessImage|| (businessImageRemoved?"":previous.image)
+  image:pendingBusinessImage|| (businessImageRemoved?"":previous.image),
+  location:$("businessLocation").value.trim().slice(0,120),
+  shopNumber:$("businessShopNumber").value.trim().slice(0,40)
  };
  if(!save()){db.business=previous;scheduleRenderAll();return}
  pendingBusinessImage=null;
  businessImageRemoved=false;
  $("businessImage").value="";
- $("businessProfileStatus").textContent=db.business.name||db.business.image
-  ?"Business profile saved."
+ $("businessProfileStatus").textContent=db.business.name||db.business.image||db.business.location||db.business.shopNumber
+  ?translateAppText("Business profile saved.",activeAppLanguage)
   :"Add a business name or choose a profile picture to finish setting up your profile.";
 });
 $("refreshUpdates").addEventListener("click",refreshUpdates);
@@ -3384,7 +3488,7 @@ function renderSales(includeHistory=true,summary=null){
    let status=isEmpty?"Out of stock":isLow?"Low stock":"In stock";
    let statusClass=isEmpty?" is-empty":isLow?" is-low":"";
    let enteredBy=product.lastUpdatedBy||product.addedBy;
-   return `<button type="button" class="owner-stock-row${statusClass}" aria-label="Open ${esc(product.name)} in products and stock" onclick="openProductsWithFilter('all','${esc(product.name)}')">${product.image?`<img src="${esc(product.image)}" alt="" style="width:54px;height:54px;object-fit:cover;border-radius:9px">`:""}<span class="owner-stock-name"><strong>${esc(product.name)}</strong><small>${esc(product.category||"Uncategorised")} · ${status}${enteredBy?" · Updated by "+esc(enteredBy):""}</small><small>Shop: ${stockAt(product,"shop").toLocaleString()} · Store: ${stockAt(product,"store").toLocaleString()}</small></span><span class="owner-stock-quantity"><strong>${quantity.toLocaleString()}</strong><small>piece${quantity===1?"":"s"} total</small></span></button>`;
+   return `<button type="button" class="owner-stock-row${statusClass}" aria-label="Open ${esc(product.name)} in products and stock" onclick="openProductsWithFilter('all','${esc(product.name)}')">${product.image?`<img src="${esc(product.image)}" alt="" loading="lazy" decoding="async" style="width:54px;height:54px;object-fit:cover;border-radius:9px">`:""}<span class="owner-stock-name"><strong>${esc(product.name)}</strong><small>${esc(product.category||"Uncategorised")} · ${status}${enteredBy?" · Updated by "+esc(enteredBy):""}</small><small>Shop: ${stockAt(product,"shop").toLocaleString()} · Store: ${stockAt(product,"store").toLocaleString()}</small></span><span class="owner-stock-quantity"><strong>${quantity.toLocaleString()}</strong><small>piece${quantity===1?"":"s"} total</small></span></button>`;
   }).join("")||'<div class="dashboard-empty"><b>No products added yet</b>Products added by an employee will appear here.</div>';
   renderOwnerEmployeeActivity();
   if(ownerSalesHistoryVisible)renderOwnerSalesHistory();
