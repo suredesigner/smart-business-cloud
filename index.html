@@ -1074,7 +1074,7 @@ html.windows-performance .product-card{-webkit-backdrop-filter:none!important;ba
     <div class="dashboard-toolbar-actions">
       <span class="updates-status" id="updatesStatus" role="status" aria-live="polite"></span>
       <button type="button" class="updates-button" id="refreshUpdates" aria-label="Refresh latest saved updates">
-        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.387</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
+        <span class="updates-icon" aria-hidden="true">↻</span><span>Updates<small class="app-version">V1.388</small><small class="updates-time" id="lastUpdated">Ready to check</small></span>
       </button>
       <div class="settings-wrap">
         <button type="button" class="settings-button" id="settingsButton" aria-label="App settings" aria-haspopup="true" aria-expanded="false" title="App settings">⋮</button>
@@ -1121,7 +1121,7 @@ html.windows-performance .product-card{-webkit-backdrop-filter:none!important;ba
             <input type="file" id="backupFile" accept="application/json,.json" hidden>
           </div>
           <div class="settings-section-title">App info</div>
-          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.387</span><br>Made by ALZ</div>
+          <div class="settings-info"><strong>Smart Business</strong>Version <span class="app-version">V1.388</span><br>Made by ALZ</div>
         </div>
       </div>
     </div>
@@ -1634,7 +1634,7 @@ const ACCOUNT_HASH_ITERATIONS=120000;
 const MAX_AGENT_ACCOUNTS=3;
 const SESSION_HEARTBEAT_MS=15000;
 const SESSION_ACTIVE_MS=45000;
-const APP_VERSION="V1.387";
+const APP_VERSION="V1.388";
 const LANGUAGE_KEY="smart_business_language_v1";
 const APP_LANGUAGES={en:"en-UG",sw:"sw-UG",lg:"lg-UG",ar:"ar-UG",fr:"fr-FR",de:"de-DE"};
 const APP_TRANSLATIONS={
@@ -2017,6 +2017,7 @@ const APP_TRANSLATIONS={
  "Amount":{sw:"Kiasi",lg:"Omuwendo",ar:"المبلغ",fr:"Montant",de:"Betrag"},
  "0 customers owe you":{sw:"Wateja 0 wanakudai",lg:"Bakasitoma 0 bakubanjibwa",ar:"0 عملاء مدينون لك",fr:"0 client ne vous doit d’argent",de:"0 Kunden schulden Ihnen Geld"},
  "0 overdue debts":{sw:"Madeni 0 yamechelewa",lg:"Amabanja 0 gaweddeko obudde",ar:"0 ديون متأخرة",fr:"0 dette en retard",de:"0 überfällige Schulden"},
+ "The owner manages debt details. Employees can record payments when connected to the team cloud.":{sw:"Mmiliki hudhibiti maelezo ya deni. Wafanyakazi wanaweza kurekodi malipo wakiwa wameunganishwa kwenye wingu la timu.",lg:"Nyini ye y'ebyabanja ddukanya ebikwata ku bbanja. Abakozi basobola okuwandiika ensasula nga bayungiddwa ku team cloud.",ar:"يدير المالك تفاصيل الديون. يمكن للموظفين تسجيل المدفوعات عند الاتصال بسحابة الفريق.",fr:"Le propriétaire gère les détails des dettes. Les employés peuvent enregistrer les paiements lorsqu’ils sont connectés au cloud de l’équipe.",de:"Der Inhaber verwaltet die Schuldendetails. Mitarbeiter können Zahlungen erfassen, wenn sie mit der Team-Cloud verbunden sind."},
  "Sales saved with the payment method \"Credit / unpaid\" are added here automatically.":{sw:"Mauzo yaliyohifadhiwa kwa njia ya “Mkopo / haijalipwa” huongezwa hapa kiotomatiki.",lg:"Okutunda okwawandiikibwa nga “Ebanja / tekisasuddwa” kwongerwako wano.",ar:"تُضاف هنا تلقائيًا المبيعات المحفوظة بطريقة «آجل / غير مدفوع».",fr:"Les ventes enregistrées comme « Crédit / impayé » sont ajoutées ici automatiquement.",de:"Als „Kredit / unbezahlt“ erfasste Verkäufe werden hier automatisch hinzugefügt."},
  "Set the project URL and public anon key in":{sw:"Weka URL ya mradi na ufunguo wa umma wa anon kwenye",lg:"Teeka URL ya pulojekiti ne koodi ya anon mu",ar:"أدخل رابط المشروع ومفتاح anon العام في",fr:"Définissez l’URL du projet et la clé anon publique dans",de:"Projekt-URL und öffentlichen Anon-Schlüssel eintragen in"},
  "Never put a service-role key in the app.":{sw:"Usiweke kamwe ufunguo wa jukumu la huduma kwenye programu.",lg:"Toteeka koodi ya service-role mu app.",ar:"لا تضع مفتاح دور الخدمة في التطبيق أبدًا.",fr:"Ne placez jamais une clé de rôle de service dans l’application.",de:"Fügen Sie niemals einen Service-Role-Schlüssel in die App ein."},
@@ -3530,6 +3531,11 @@ function debtGuard(){
  alert("Only Admin / Owner can manage customer debts.");
  return false;
 }
+function employeeCanPayDebt(debt){
+ if(currentRole!=="agent")return false;
+ if(teamIsSharedDebt(debt.id))return true;
+ return !debt.teamShared&&debt.recordedBy===currentUsername&&!debt.addedByOwner;
+}
 function debtActivity(type,details){if(currentRole==="agent")addEmployeeActivity(type,details)}
 $("debtForm").addEventListener("submit",e=>{
  e.preventDefault();if(!debtGuard())return;
@@ -3545,7 +3551,7 @@ function renderDebts(){
  $("debtForm").closest(".card").hidden=!ownerView;
  $("debtPageDescription").textContent=ownerView
   ?"Track what customers owe, record payments as they come in, and edit or correct any debt."
-  :"Customer debts are managed by the owner. Debt changes and paid status sync to this account when connected.";
+  :"The owner manages debt details. Employees can record payments when connected to the team cloud.";
  let t=debtTotals();
  $("debtOutstanding").textContent=cash(t.owed);
  $("debtOutstandingNote").textContent=`${t.customers.toLocaleString()} customer${t.customers===1?"":"s"} owe${t.customers===1?"s":""} you`;
@@ -3564,7 +3570,8 @@ function renderDebts(){
  $("debtList").innerHTML=list.map(d=>{
   let balance=debtBalance(d),pays=d.payments||[];
   let history=pays.length?`<details class="debt-history"><summary>${pays.length} payment${pays.length===1?"":"s"}</summary>${pays.map(p=>`<div><span>${esc(p.date)} · ${cash(p.amount)}${p.note?" · "+esc(p.note):""}</span>${ownerView?`<button type="button" class="danger" onclick="removeDebtPayment('${d.id}','${p.id}')">Remove</button>`:""}</div>`).join("")}</details>`:"";
-  let actions=ownerView?`<div class="debt-actions">${balance>0?`<button type="button" onclick="openDebtPayment('${d.id}')">Record payment</button>`:""}<button type="button" class="secondary" onclick="openDebtEdit('${d.id}')">Edit</button><button type="button" class="danger" onclick="deleteDebt('${d.id}')">Delete</button></div>`:"Owner managed";
+  let canPay=ownerView||employeeCanPayDebt(d);
+  let actions=ownerView?`<div class="debt-actions">${balance>0?`<button type="button" onclick="openDebtPayment('${d.id}')">Record payment</button>`:""}<button type="button" class="secondary" onclick="openDebtEdit('${d.id}')">Edit</button><button type="button" class="danger" onclick="deleteDebt('${d.id}')">Delete</button></div>`:canPay&&balance>0?`<div class="debt-actions"><button type="button" onclick="openDebtPayment('${d.id}')">Record payment</button></div>`:"Owner managed";
   return `<tr><td>${esc(d.date)}</td><td><strong>${esc(d.customer)}</strong>${d.phone?`<br><small class="muted">${esc(d.phone)}</small>`:""}${d.notes?`<br><small class="muted">${esc(d.notes)}</small>`:""}${history}</td><td>${cash(d.amount)}</td><td>${cash(debtPaid(d))}</td><td><strong>${cash(balance)}</strong></td><td>${esc(d.due||"Not set")}</td><td>${debtBadge(d)}</td><td>${actions}</td></tr>`;
  }).join("")||'<tr><td colspan="8">No debts match this view.</td></tr>';
 }
@@ -3625,8 +3632,8 @@ $("debtEditForm").addEventListener("submit",e=>{
  closeDebtEdit();save();
 });
 function openDebtPayment(id){
- if(!debtGuard())return;
  let d=db.debts.find(x=>x.id===id);if(!d)return;
+ if(currentRole!=="admin"&&!employeeCanPayDebt(d)){alert("Only the owner can manage this debt. Employees can record payments on shared debts or their own credit sales.");return}
  payingDebtId=id;
  $("debtPayInfo").textContent=`${d.customer} · Balance: ${cash(debtBalance(d))}`;
  $("debtPayAmount").value=debtBalance(d);$("debtPayAmount").max=debtBalance(d);
@@ -3636,15 +3643,40 @@ function openDebtPayment(id){
 function closeDebtPayment(){$("debtPayOverlay").hidden=true;payingDebtId=""}
 $("cancelDebtPay").addEventListener("click",closeDebtPayment);
 $("debtPayOverlay").addEventListener("click",e=>{if(e.target===$("debtPayOverlay"))closeDebtPayment()});
-$("debtPayForm").addEventListener("submit",e=>{
- e.preventDefault();if(!debtGuard())return;
+$("debtPayForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ let employeePayment=currentRole==="agent";
+ if(!employeePayment&&!debtGuard())return;
  let d=db.debts.find(x=>x.id===payingDebtId);
  if(!d){alert("This debt no longer exists.");closeDebtPayment();return}
  let amount=+$("debtPayAmount").value;
  if(!Number.isFinite(amount)||amount<=0){alert("Enter an amount greater than zero.");return}
  if(amount>debtBalance(d)){alert(`That is more than the ${cash(debtBalance(d))} balance.`);return}
  d.payments=d.payments||[];
- d.payments.push({id:uid(),amount,date:$("debtPayDate").value,note:$("debtPayNote").value.trim(),by:currentUsername});
+ let payment={id:uid(),amount,date:$("debtPayDate").value,note:$("debtPayNote").value.trim(),by:currentUsername};
+ if(employeePayment&&teamIsSharedDebt(d.id)){
+  try{
+   await teamRecordDebtPayment(d.id,payment);
+  }catch(error){
+   console.error("Unable to record an employee debt payment.",error);
+   alert(`The payment was not recorded: ${error.message}`);
+   return;
+  }
+  debtActivity("Debt payment received",`${d.customer} · ${cash(amount)}`);
+  closeDebtPayment();
+  try{
+   await teamLoadDebts();
+   if(!save())throw new Error("This device could not save the refreshed debt list.");
+  }catch(error){
+   console.error("Unable to refresh the shared debt after recording a payment.",error);
+   alert(`The payment was recorded in the team cloud, but this device could not refresh the debt list. Reconnect and sync again. ${error.message}`);
+   return;
+  }
+  alert("Payment recorded.");
+  return;
+ }
+ if(employeePayment&&!employeeCanPayDebt(d)){alert("Only the owner can record a payment on this debt.");return}
+ d.payments.push(payment);
  debtActivity("Debt payment received",`${d.customer} · ${cash(amount)}`);
  closeDebtPayment();save();
 });

@@ -7,6 +7,7 @@ const TEAM_CACHE_KEY = "smart_business_team_cache_v1";
 const TEAM_SESSION_KEY = "smart_business_team_session_v1";
 const TEAM_MEMBER_KEY = "smart_business_team_member_v1";
 const TEAM_PENDING_SIGNUP_KEY = "smart_business_pending_signup_v1";
+const TEAM_DEBT_PAYMENT_SNAPSHOT_KEY = "smart_business_team_debt_payment_snapshot_v1";
 
 let teamData = { comments: [], photos: [] };
 let teamCloudSession = null;
@@ -20,6 +21,8 @@ let teamDebtSyncTimer = 0;
 let teamDebtSyncBusy = false;
 let teamDebtSyncedAt = "";
 let teamDebtSyncedData = "";
+let teamDebtSyncedEmployeePaymentIds = new Set();
+const teamSharedDebtIds = new Set();
 const teamById = id => document.getElementById(id);
 const teamUid = () => window.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
 
@@ -51,6 +54,24 @@ function teamSaveCache() {
     teamStatus("Employee notes could not be saved on this device. Free up browser storage and try again.", "error");
     return false;
   }
+}
+
+function teamReadEmployeeDebtPaymentSnapshot(workspaceId) {
+  const key = `${TEAM_DEBT_PAYMENT_SNAPSHOT_KEY}_${workspaceId}`;
+  const saved = localStorage.getItem(key);
+  if (!saved) return new Set();
+  let ids;
+  try { ids = JSON.parse(saved); }
+  catch (error) { throw new Error("The saved debt sync checkpoint is unreadable."); }
+  if (!Array.isArray(ids) || ids.some(id => typeof id !== "string")) {
+    throw new Error("The saved debt sync checkpoint has an invalid format.");
+  }
+  return new Set(ids);
+}
+
+function teamStoreEmployeeDebtPaymentSnapshot(workspaceId, ids) {
+  const key = `${TEAM_DEBT_PAYMENT_SNAPSHOT_KEY}_${workspaceId}`;
+  localStorage.setItem(key, JSON.stringify([...ids]));
 }
 
 function teamKeepRecent(items, maximum = 500) {
@@ -274,9 +295,11 @@ async function teamGetMembership() {
     teamPhotosHaveMore = false;
     teamDebtSyncedAt = "";
     teamDebtSyncedData = "";
+    teamSharedDebtIds.clear();
   }
   teamCloudMember = member;
   teamCloudWorkspace = member.workspace_id;
+  teamDebtSyncedEmployeePaymentIds = teamReadEmployeeDebtPaymentSnapshot(teamCloudWorkspace);
   teamMembers = await teamRequest(`team_members?select=user_id,username,role&workspace_id=eq.${encodeURIComponent(teamCloudWorkspace)}&order=username.asc`);
   teamSaveMemberCache();
 }
@@ -357,6 +380,7 @@ async function teamCloudLoginFromLogin(signUp) {
     teamCloudMember = null;
     teamCloudWorkspace = null;
     teamMembers = [];
+    teamSharedDebtIds.clear();
     teamDebtSyncedAt = "";
     teamDebtSyncedData = "";
     status.textContent = error.message || "Cloud sign-in failed. Check your connection and account details.";
@@ -586,21 +610,88 @@ async function teamSyncNow() {
 async function teamPushDebts() {
   if (!teamCloudMember || teamCloudMember.role !== "admin" ||
     !navigator.onLine || teamDebtSyncBusy) return false;
-  const serialized = JSON.stringify(db.debts);
-  if (serialized === teamDebtSyncedData) return true;
   teamDebtSyncBusy = true;
   try {
-    await teamRequest("team_debt_records?on_conflict=workspace_id", {
-      method: "POST",
-      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-      body: { workspace_id: teamCloudWorkspace, payload: db.debts }
-    });
-    teamDebtSyncedAt = new Date().toISOString();
-    teamDebtSyncedData = serialized;
-    return true;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const rows = await teamRequest(`team_debt_records?select=payload,updated_at&workspace_id=eq.${encodeURIComponent(teamCloudWorkspace)}&limit=1`);
+      const record = rows?.[0] || null;
+      if (record && (!Array.isArray(record.payload) ||
+        record.payload.some(debt => !debt || typeof debt !== "object" ||
+          typeof debt.id !== "string" || !Array.isArray(debt.payments)))) {
+        throw new Error("The shared customer debts have an invalid format.");
+      }
+
+      const localDebts = new Map(db.debts.map(debt => [debt.id, debt]));
+      let mergedPayments = false;
+      for (const remoteDebt of record?.payload || []) {
+        const localDebt = localDebts.get(remoteDebt.id);
+        if (!localDebt) continue;
+        const paymentIds = new Set((localDebt.payments || []).map(payment => payment.id));
+        for (const payment of remoteDebt.payments || []) {
+          if (!payment.employee_id || teamDebtSyncedEmployeePaymentIds.has(payment.id) ||
+            paymentIds.has(payment.id)) continue;
+          if (debtPaid(localDebt) + Number(payment.amount) > Number(localDebt.amount)) {
+            throw new Error(`The shared balance for ${localDebt.customer} changed while an employee payment was being recorded. Review this debt before syncing.`);
+          }
+          localDebt.payments = [...(localDebt.payments || []), payment];
+          paymentIds.add(payment.id);
+          mergedPayments = true;
+        }
+      }
+      if (mergedPayments && !save()) {
+        throw new Error("The employee payment was kept in the cloud, but this device could not save the refreshed debt list.");
+      }
+
+      const serialized = JSON.stringify(db.debts);
+      if (record && teamStableJson(db.debts) === teamStableJson(record.payload)) {
+        teamDebtSyncedAt = record.updated_at || "";
+        teamDebtSyncedData = serialized;
+        const employeePaymentIds = teamGetEmployeeDebtPaymentIds(db.debts);
+        teamDebtSyncedEmployeePaymentIds = employeePaymentIds;
+        teamStoreEmployeeDebtPaymentSnapshot(teamCloudWorkspace, employeePaymentIds);
+        return true;
+      }
+
+      try {
+        await teamRpc("save_team_debts", {
+          p_workspace_id: teamCloudWorkspace,
+          p_payload: db.debts,
+          p_expected_updated_at: record?.updated_at || null
+        });
+        teamDebtSyncedAt = new Date().toISOString();
+        teamDebtSyncedData = serialized;
+        const employeePaymentIds = teamGetEmployeeDebtPaymentIds(db.debts);
+        teamDebtSyncedEmployeePaymentIds = employeePaymentIds;
+        teamStoreEmployeeDebtPaymentSnapshot(teamCloudWorkspace, employeePaymentIds);
+        return true;
+      } catch (error) {
+        if (!String(error.message).includes("Shared debts changed while saving") || attempt === 2) throw error;
+      }
+    }
+    return false;
   } finally {
     teamDebtSyncBusy = false;
   }
+}
+
+function teamGetEmployeeDebtPaymentIds(debts) {
+  const ids = new Set();
+  for (const debt of debts) {
+    for (const payment of debt.payments || []) {
+      if (payment.employee_id && typeof payment.id === "string") ids.add(payment.id);
+    }
+  }
+  return ids;
+}
+
+function teamStableJson(value) {
+  if (Array.isArray(value)) return `[${value.map(teamStableJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map(key =>
+      `${JSON.stringify(key)}:${teamStableJson(value[key])}`
+    ).join(",")}}`;
+  }
+  return JSON.stringify(value);
 }
 
 async function teamLoadDebts() {
@@ -613,17 +704,42 @@ async function teamLoadDebts() {
       typeof debt.id !== "string" || !Array.isArray(debt.payments))) {
     throw new Error("The shared customer debts have an invalid format.");
   }
+  teamSharedDebtIds.clear();
+  record.payload.forEach(debt => teamSharedDebtIds.add(debt.id));
   const serialized = JSON.stringify(record.payload);
   if (serialized === teamDebtSyncedData && record.updated_at === teamDebtSyncedAt) return;
   const remoteIds = new Set(record.payload.map(debt => debt.id));
   const employeeSalesDebts = db.debts.filter(debt =>
-    debt && debt.recordedBy === currentUsername && !remoteIds.has(debt.id)
+    debt && !debt.teamShared && debt.recordedBy === currentUsername && !remoteIds.has(debt.id)
   );
-  db.debts = [...record.payload, ...employeeSalesDebts];
+  db.debts = [
+    ...record.payload.map(debt => ({ ...debt, teamShared: true })),
+    ...employeeSalesDebts.map(debt => ({ ...debt, teamShared: false }))
+  ];
   if (!save()) throw new Error("The latest customer debts could not be saved on this device.");
   teamDebtSyncedAt = record.updated_at || "";
   teamDebtSyncedData = serialized;
   teamStatus("Customer debts and payment status updated from the owner.", "ok");
+}
+
+function teamIsSharedDebt(debtId) {
+  return teamSharedDebtIds.has(debtId);
+}
+
+async function teamRecordDebtPayment(debtId, payment) {
+  if (!teamCloudMember || teamCloudMember.role !== "agent" || !teamCloudWorkspace) {
+    throw new Error("Connect this employee account to the team cloud before recording a shared debt payment.");
+  }
+  if (!navigator.onLine) throw new Error("An internet connection is required to record a shared debt payment.");
+  if (!teamSharedDebtIds.has(debtId)) throw new Error("This shared debt is no longer available. Sync the debt list and try again.");
+  await teamRpc("record_team_debt_payment", {
+    p_workspace_id: teamCloudWorkspace,
+    p_debt_id: debtId,
+    p_payment_id: payment.id,
+    p_amount: payment.amount,
+    p_date: payment.date,
+    p_note: payment.note
+  });
 }
 
 async function teamPushPendingComments() {
